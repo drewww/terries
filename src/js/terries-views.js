@@ -2,6 +2,21 @@ views = {};
 
 views.selectedUnitView = null;
 
+views.setSelectedUnitView = function(unitView) {
+  
+  if(!_.isNull(views.selectedUnitView)) {
+    views.selectedUnitView.selected = false;
+    views.selectedUnitView.render();
+  }
+  
+  views.selectedUnitView = unitView;
+  
+  if(!_.isNull(unitView)) {
+    unitView.selected = true;
+    unitView.render();
+  }
+}
+
 views.UnitView = Backbone.View.extend({
   className: "unit",
   selected: false,
@@ -33,14 +48,8 @@ views.UnitView = Backbone.View.extend({
   clicked: function(event) {
     this.trigger("clicked", this);
     
-    if(!_.isNull(views.selectedUnitView)) {
-      views.selectedUnitView.selected = false;
-      views.selectedUnitView.render();
-    }
-    
-    this.selected = true;
-    views.selectedUnitView = this;
-    this.render();
+    views.setSelectedUnitView(this);
+    event.stopPropagation();
   }
   
 });
@@ -81,6 +90,7 @@ views.TileView = Backbone.View.extend({
     if(!_.isNull(views.selectedUnitView)) {
       views.selectedUnitView.model.set("targetX", this.model.get("x"));
       views.selectedUnitView.model.set("targetY", this.model.get("y"));
+      views.setSelectedUnitView(null);
     }
   }
 });
