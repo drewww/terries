@@ -1,0 +1,37 @@
+{
+	"name": "terries-server",
+	"version": "0.1.0",
+	"description": "Terries game server.",
+	"contributors": [
+		{
+			"name": "Drew Harry",
+			"email": "drew.harr@gmail.com"
+		}
+	],
+
+	"repository": {
+		"type": "git",
+		"url": ""
+	},
+
+	"scripts": {
+		"start": "node server.js -p 7070 -h localhost",
+		"test": "mocha"
+	},
+
+	"dependencies" : {
+		"commander" : "*",
+		"express" : "*",
+		"underscore" : "*",
+		"ejs" : "*"
+	},
+
+	"devDependencies": {
+		"should": "*",
+		"mocha": "*"
+	},
+
+	"engines": {
+    	"node": ">=0.6"
+  	}
+}
