@@ -1,19 +1,27 @@
 types = {};
 
+types.curMap = null;
+types.nextUnitId = 0;
 types.Unit = Backbone.Model.extend({
   defaults: {
     team: 0,
-    tile: null,
     targetX: null,
     targetY: null,
-    selected: false
+    x: null,
+    y: null,
   },
   
   initialize: function(attributes) {
     Backbone.Model.prototype.initialize.call(this, attributes);
+    this.id = types.nextUnitId;
+    types.nextUnitId++;
+    
     this.on("change", function() {
       console.log("changed: "+ JSON.stringify(this.changedAttributes()));
     }, this);
+    
+    var tile = types.curMap.getTile(this.get("x"), this.get("y"));
+    tile.set("unitId", this.id);
   },
   
   
@@ -33,12 +41,16 @@ types.Unit = Backbone.Model.extend({
       // move towards the target. some vector math shit here.
       // draw a vector to the target, normalize it
       var target = new Vec2(this.get("targetX"), this.get("targetY"));
-      var pos = new Vec2(this.tile.get("x"), this.tile.get("y"));
+      var pos = new Vec2(this.get("x"), this.get("y"));
     
       target.subV(pos);
       target.normalize();
       this.moveBy(Math.round(target.x), Math.round(target.y));
     }
+  },
+  
+  getTile: function() {
+    types.curMap.getTile(this.get("x"), this.get("y"));
   }
   
 });
@@ -47,10 +59,9 @@ types.Tile = Backbone.Model.extend({
   defaults: {
     passable: true,
     empty: true,
-    unit: null,
+    unitId: null,
     x: -1,
     y: -1,
-    map: null,
   },
   
   initialize: function(attributes) {
@@ -59,11 +70,7 @@ types.Tile = Backbone.Model.extend({
   },
   
   setUnit: function(unit) {
-    this.set("unit", unit);
-    
-    // gotta give it a starting reference. Move command will update this
-    // reference.
-    unit.set("tile", this);
+    this.set("unitId", unit.id);
   },
   
   getAdjacentTile: function(dX, dY) {
@@ -72,7 +79,7 @@ types.Tile = Backbone.Model.extend({
     if(dY > 1) dY=1;
     if(dY < -1) dY=-1;
     
-    return this.map.getTile(this.x + dX, this.y + dY);
+    return types.curMap.getTile(this.x + dX, this.y + dY);
   }
 });
 
@@ -90,7 +97,7 @@ types.Map = Backbone.Collection.extend({
   
   initialize: function(models, options) {
     Backbone.Collection.prototype.initialize.call(this, models, options);
-    
+    types.curMap = this;
     options = _.defaults(options, {width:200, height:400});
     
     this.width = options.width;
@@ -124,10 +131,8 @@ types.Map = Backbone.Collection.extend({
   },
   
   createUnitAt: function(x, y, team) {
-    var unit = new types.Unit({team:team});
-    var tile = this.getTile(x, y);
+    var unit = new types.Unit({team:team, x:x, y:y});
     this.units.add(unit);
-    tile.set("unit", unit);
   }
   
 });

@@ -62,12 +62,13 @@ views.TileView = Backbone.View.extend({
   render: function() {
     this.$el.html();
     
-    var unit = this.model.get("unit");
-    if(!_.isNull(unit)) {
-      var unitView = new views.UnitView({model:unit});
-      this.$el.append(unitView.render().el);
+    if(this.model.has("unitId")) {
+      var unit = types.curMap.units.get(this.model.get("unitId"));
+      if(!_.isNull(unit)) {
+        var unitView = new views.UnitView({model:unit});
+        this.$el.append(unitView.render().el);
+      }
     }
-    
     return this;
   },
   
