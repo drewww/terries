@@ -1,16 +1,29 @@
 
+.unit.team0 {
+  background-color: green;
+}
+
+.unit.team1 {
+  background-color: blue;
+}
+
+.unit {
+  width: 10px;
+  height: 10px;
+}
+
 .tile.even {
   background-color: white;
 }
 
 .tile.odd {
-  background-color: gray;
+  background-color: #ddd;
 }
 
 .tile {
   float: left;
-  width: 5px;
-  height: 5px;
+  width: 10px;
+  height: 10px;
 }
 
 br.clear {

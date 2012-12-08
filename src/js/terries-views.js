@@ -1,10 +1,36 @@
 views = {};
 
+views.UnitView = Backbone.View.extend({
+  className: "unit",
+
+  intialize: function(params) {
+    Backbone.View.prototype.initialize.call(this, params);
+  },
+  
+  render: function() {
+    if(this.model.get("team")==0){
+      this.$el.addClass("team0");
+    } else {
+      this.$el.addClass("team1");
+    }
+    
+    return this;
+  }
+  
+});
+
 views.TileView = Backbone.View.extend({
   className: "tile",
   
   render: function() {
     this.$el.html();
+    
+    var unit = this.model.get("unit");
+    if(!_.isNull(unit)) {
+      console.log("found unit!");
+      var unitView = new views.UnitView({model:unit});
+      this.$el.append(unitView.render().el);
+    }
     
     return this;
   }

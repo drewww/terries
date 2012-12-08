@@ -2,9 +2,7 @@ types = {};
 
 types.Unit = Backbone.Model.extend({
   defaults: {
-    team: 0,
-    x: 0,
-    y: 0
+    team: 0
   }
 });
 
