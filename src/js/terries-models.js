@@ -45,7 +45,7 @@ types.Unit = Backbone.Model.extend({
       var target = new Vec2(this.get("targetX"), this.get("targetY"));
       var pos = new Vec2(this.get("x"), this.get("y"));
     
-      target.subV(pos);
+      target = target.subV(pos);
       target.normalize();
       this.moveBy(Math.round(target.x), Math.round(target.y));
     }
