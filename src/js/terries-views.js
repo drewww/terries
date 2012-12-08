@@ -54,7 +54,9 @@ views.TileView = Backbone.View.extend({
   
   initialize: function(params) {
     Backbone.View.prototype.initialize.call(this, params);
-    this.model.bind("change", this.render, this);
+    this.model.bind("change", function() {
+      this.render();
+    }, this);
   },
   
   render: function() {
@@ -70,7 +72,13 @@ views.TileView = Backbone.View.extend({
   },
   
   clicked: function() {
-    this.trigger("clicked", this.model);
+    this.trigger("clicked", this);
+    
+    // if there's a selected unit, set its target.
+    if(!_.isNull(views.selectedUnitView)) {
+      views.selectedUnitView.model.set("targetX", this.model.get("x"));
+      views.selectedUnitView.model.set("targetY", this.model.get("y"));
+    }
   }
 });
 

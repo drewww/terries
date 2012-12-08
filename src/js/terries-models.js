@@ -9,10 +9,10 @@ types.Unit = Backbone.Model.extend({
     selected: false
   },
   
-  intialize: function(attributes) {
+  initialize: function(attributes) {
     Backbone.Model.prototype.initialize.call(this, attributes);
     this.on("change", function() {
-      console.log("changed: "+ JSON.stringify(this.changedAttributes));
+      console.log("changed: "+ JSON.stringify(this.changedAttributes()));
     }, this);
   },
   
@@ -53,7 +53,7 @@ types.Tile = Backbone.Model.extend({
     map: null,
   },
   
-  intialize: function(attributes) {
+  initialize: function(attributes) {
     Backbone.Model.prototype.initialize.call(this, attributes);
     this.set("id", this.get("x") + "x" + this.get("y"));
   },
