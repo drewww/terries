@@ -57,6 +57,11 @@ types.Unit = Backbone.Model.extend({
   
   getTile: function() {
     return types.curMap.getTile(this.get("x"), this.get("y"));
+  },
+  
+  setTarget: function(x, y) {
+    this.set("targetX", x);
+    this.set("targetY", y);
   }
   
 });
@@ -68,6 +73,7 @@ types.Tile = Backbone.Model.extend({
     unitId: null,
     x: -1,
     y: -1,
+    isTargetForTeam: null,
   },
   
   initialize: function(attributes) {
@@ -121,8 +127,7 @@ types.Map = Backbone.Collection.extend({
           
           // if a unit is selected, make that its target.
           if(!_.isNull(this.unitSelected)) {
-            this.unitSelected.set("targetX", tile.get("x"));
-            this.unitSelected.set("targetY", tile.get("y"));
+            this.unitSelected.setTarget(tile.get("x"), tile.get("y"));
           }
           
         }, this);
