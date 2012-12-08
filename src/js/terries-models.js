@@ -28,8 +28,8 @@ types.Unit = Backbone.Model.extend({
   moveBy: function(dX, dY) {
     console.log("moving by: " + dX + "-" + dY);
     
-    var newTile = this.tile.getAdjacentTile(dX, dY);
-    this.tile.setUnit(null);
+    var newTile = this.getTile().getAdjacentTile(dX, dY);
+    this.getTile().setUnit(null);
     this.set("tile", newTile);
     newTile.setUnit(this);
   },
@@ -50,7 +50,7 @@ types.Unit = Backbone.Model.extend({
   },
   
   getTile: function() {
-    types.curMap.getTile(this.get("x"), this.get("y"));
+    return types.curMap.getTile(this.get("x"), this.get("y"));
   }
   
 });
@@ -70,7 +70,11 @@ types.Tile = Backbone.Model.extend({
   },
   
   setUnit: function(unit) {
-    this.set("unitId", unit.id);
+    if(_.isNull(unit) || _.isUndefined(unit)) {
+      this.set("unitId", null);
+    } else {
+      this.set("unitId", unit.id);
+    }
   },
   
   getAdjacentTile: function(dX, dY) {
@@ -79,7 +83,7 @@ types.Tile = Backbone.Model.extend({
     if(dY > 1) dY=1;
     if(dY < -1) dY=-1;
     
-    return types.curMap.getTile(this.x + dX, this.y + dY);
+    return types.curMap.getTile(this.get("x") + dX, this.get("y") + dY);
   }
 });
 

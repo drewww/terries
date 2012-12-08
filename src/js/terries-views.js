@@ -55,14 +55,16 @@ views.TileView = Backbone.View.extend({
   initialize: function(params) {
     Backbone.View.prototype.initialize.call(this, params);
     this.model.bind("change", function() {
+      console.log("render: " + this.model.get("x") + "x" + this.model.get("y"));
       this.render();
     }, this);
   },
   
   render: function() {
-    this.$el.html();
+    this.$el.html("");
     
     if(this.model.has("unitId")) {
+      console.log("rendering unit in tile: " + this.model.get("x") + " " + this.model.get("y"));
       var unit = types.curMap.units.get(this.model.get("unitId"));
       if(!_.isNull(unit)) {
         var unitView = new views.UnitView({model:unit});
