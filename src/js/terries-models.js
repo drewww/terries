@@ -37,11 +37,10 @@ types.Map = Backbone.Collection.extend({
     this.width = options.width;
     this.height = options.height;
     // now generate tiles.
-    for(var y=0; y<this.width; y++) {
-      for(var x=0; x<this.height; x++) {
+    for(var y=0; y<this.height; y++) {
+      for(var x=0; x<this.width; x++) {
         var newTile = new types.Tile({x:x, y:y});
         this.add(newTile);
-        console.log("added tile: " + newTile.id);
       }
     }
     

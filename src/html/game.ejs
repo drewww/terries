@@ -14,19 +14,25 @@
   <script src="/static/js/terries-models.js"></script>
   <script src="/static/js/terries-views.js"></script>
 
+	<link rel="stylesheet" href="/static/css/screen.css" type="text/css" media="screen" charset="utf-8">
+
 	<script type="text/javascript" charset="utf-8">
 		var host = "<%= host %>";
    	var port = <%= port %>;
 
-   	var roomId;
+		var map;
    	
 		$(document).ready(function() {
 			console.log("loaded");
+			
+			map = new types.Map(null, {width:50, height: 50});
+			var mapView = new views.MapView({collection:map});
+			$("body").append(mapView.render().el);
 		});
 	
 	</script>
 	
-	<link rel="stylesheet" href="/static/css/screen.css" type="text/css" media="screen" charset="utf-8">
+
 
 </head>
 <body>

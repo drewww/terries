@@ -1,0 +1,23 @@
+
+.tile.even {
+  background-color: white;
+}
+
+.tile.odd {
+  background-color: gray;
+}
+
+.tile {
+  float: left;
+  width: 5px;
+  height: 5px;
+}
+
+br.clear {
+    content: ".";
+  	display: block;
+  	clear: both;
+  	visibility: hidden;
+  	line-height: 0;
+  	height: 0;
+}
