@@ -2,8 +2,23 @@ types = {};
 
 types.Unit = Backbone.Model.extend({
   defaults: {
-    team: 0
+    team: 0,
+    tile: null,
+    targetX: -1,
+    targetY: -1
+  },
+  
+  moveBy: function(dX, dY) {
+    var newTile = this.tile.getAdjacentTile(dX, dY);
+    this.tile.setUnit(null);
+    this.set("tile", newTile);
+    newTile.setUnit(this);
+  },
+  
+  moveTowardsTarget: function() {
+    // move towards the target. some vector math shit here.
   }
+  
 });
 
 types.Tile = Backbone.Model.extend({
@@ -13,11 +28,29 @@ types.Tile = Backbone.Model.extend({
     unit: null,
     x: -1,
     y: -1,
+    map: null,
   },
   
   intialize: function(attributes) {
     Backbone.Model.prototype.initialize.call(this, attributes);
     this.set("id", this.get("x") + "x" + this.get("y"));
+  },
+  
+  setUnit: function(unit) {
+    this.set("unit", unit);
+    
+    // gotta give it a starting reference. Move command will update this
+    // reference.
+    unit.set("tile", this);
+  },
+  
+  getAdjacentTile: function(dX, dY) {
+    if(dX > 1) dX=1;
+    if(dX < -1) dX=-1;
+    if(dY > 1) dY=1;
+    if(dY < -1) dY=-1;
+    
+    return this.map.getTile(this.x + dX, this.y + dY);
   }
 });
 

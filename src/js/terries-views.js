@@ -2,7 +2,11 @@ views = {};
 
 views.UnitView = Backbone.View.extend({
   className: "unit",
-
+  
+  events: {
+    "click":"clicked"
+  },
+  
   intialize: function(params) {
     Backbone.View.prototype.initialize.call(this, params);
   },
@@ -15,6 +19,10 @@ views.UnitView = Backbone.View.extend({
     }
     
     return this;
+  },
+  
+  clicked: function(event) {
+    console.log("unit clicked");
   }
   
 });
