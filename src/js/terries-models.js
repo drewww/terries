@@ -4,19 +4,41 @@ types.Unit = Backbone.Model.extend({
   defaults: {
     team: 0,
     tile: null,
-    targetX: -1,
-    targetY: -1
+    targetX: null,
+    targetY: null,
+    selected: false
   },
   
+  intialize: function(attributes) {
+    Backbone.Model.prototype.initialize.call(this, attributes);
+    this.on("change", function() {
+      console.log("changed: "+ JSON.stringify(this.changedAttributes));
+    }, this);
+  },
+  
+  
   moveBy: function(dX, dY) {
+    console.log("moving by: " + dX + "-" + dY);
+    
     var newTile = this.tile.getAdjacentTile(dX, dY);
     this.tile.setUnit(null);
     this.set("tile", newTile);
     newTile.setUnit(this);
   },
   
+  
   moveTowardsTarget: function() {
-    // move towards the target. some vector math shit here.
+    if(this.has("targetX") && this.has("targetY")) {
+    
+      // move towards the target. some vector math shit here.
+      // draw a vector to the target, normalize it
+      var target = new Vec2(this.get("targetX"), this.get("targetY"));
+      var pos = new Vec2(this.tile.get("x"), this.tile.get("y"));
+    
+      target.subV(pos);
+      target.normalize();
+      this.moveBy(Math.round(target.x), Math.round(target.y));
+    }
   }
   
 });
@@ -54,11 +76,17 @@ types.Tile = Backbone.Model.extend({
   }
 });
 
+types.UnitCollection = Backbone.Collection.extend({
+  model:types.Unit
+});
+
 types.Map = Backbone.Collection.extend({
   model:types.Tile,
   
   width:0,
   height:0,
+  units: null,
+  unitSelected: null,
   
   initialize: function(models, options) {
     Backbone.Collection.prototype.initialize.call(this, models, options);
@@ -71,14 +99,35 @@ types.Map = Backbone.Collection.extend({
     for(var y=0; y<this.height; y++) {
       for(var x=0; x<this.width; x++) {
         var newTile = new types.Tile({x:x, y:y});
+        
+        newTile.bind("clicked", function(tile) {
+          
+          // if a unit is selected, make that its target.
+          if(!_.isNull(this.unitSelected)) {
+            this.unitSelected.set("targetX", tile.get("x"));
+            this.unitSelected.set("targetY", tile.get("y"));
+          }
+          
+        }, this);
+        
         this.add(newTile);
       }
     }
+    
+    this.units = new types.UnitCollection();
     
     _.bindAll(this);
   },
   
   getTile: function(x, y) {
     return this.at(x + y*this.height);
+  },
+  
+  createUnitAt: function(x, y, team) {
+    var unit = new types.Unit({team:team});
+    var tile = this.getTile(x, y);
+    this.units.add(unit);
+    tile.set("unit", unit);
   }
+  
 });

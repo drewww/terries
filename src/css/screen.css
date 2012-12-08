@@ -12,12 +12,20 @@
   height: 10px;
 }
 
+.unit.selected {
+  position: relative;
+  top: -4px;
+  left: -4px;
+  width: 18px;
+  height: 18px;
+}
+
 .tile.even {
   background-color: white;
 }
 
 .tile.odd {
-  background-color: #ddd;
+  background-color: #efefef;
 }
 
 .tile {

@@ -1,14 +1,17 @@
 views = {};
 
+views.selectedUnitView = null;
+
 views.UnitView = Backbone.View.extend({
   className: "unit",
-  
+  selected: false,
   events: {
     "click":"clicked"
   },
   
   intialize: function(params) {
     Backbone.View.prototype.initialize.call(this, params);
+    this.model.bind("change", this.render, this);
   },
   
   render: function() {
@@ -18,11 +21,26 @@ views.UnitView = Backbone.View.extend({
       this.$el.addClass("team1");
     }
     
+    if(this.selected) {
+      this.$el.addClass("selected");
+    } else {
+      this.$el.removeClass("selected");
+    }
+    
     return this;
   },
   
   clicked: function(event) {
-    console.log("unit clicked");
+    this.trigger("clicked", this);
+    
+    if(!_.isNull(views.selectedUnitView)) {
+      views.selectedUnitView.selected = false;
+      views.selectedUnitView.render();
+    }
+    
+    this.selected = true;
+    views.selectedUnitView = this;
+    this.render();
   }
   
 });
@@ -30,17 +48,29 @@ views.UnitView = Backbone.View.extend({
 views.TileView = Backbone.View.extend({
   className: "tile",
   
+  events: {
+    "click":"clicked"
+  },
+  
+  initialize: function(params) {
+    Backbone.View.prototype.initialize.call(this, params);
+    this.model.bind("change", this.render, this);
+  },
+  
   render: function() {
     this.$el.html();
     
     var unit = this.model.get("unit");
     if(!_.isNull(unit)) {
-      console.log("found unit!");
       var unitView = new views.UnitView({model:unit});
       this.$el.append(unitView.render().el);
     }
     
     return this;
+  },
+  
+  clicked: function() {
+    this.trigger("clicked", this.model);
   }
 });
 

@@ -10,9 +10,10 @@
 
 	<script src="http://cdn.sockjs.org/sockjs-0.3.min.js"></script>
 	
-	<!-- We'll need to prefix this to be relative to whatever the serving host is. For now, we're running of a local node content server, but eventually this will be off s3 and we'll need to swap out /static/ for a full s3 URL. This will be part of the compile-for-deployment step. -->
+  <script src="/static/js/vec2.js"></script>
   <script src="/static/js/terries-models.js"></script>
   <script src="/static/js/terries-views.js"></script>
+  <script src="/static/js/terries.js"></script>
 
 	<link rel="stylesheet" href="/static/css/screen.css" type="text/css" media="screen" charset="utf-8">
 
@@ -21,16 +22,13 @@
    	var port = <%= port %>;
 
 		var map;
-   	
+		var game;
 		$(document).ready(function() {
 			console.log("loaded");
 			
-			map = new types.Map(null, {width:50, height: 50});
-			map.getTile(10, 10).set("unit", new types.Unit({team:0}));
-
-			map.getTile(30, 30).set("unit", new types.Unit({team:1}));
+			game = new TerriesGame();
 			
-			var mapView = new views.MapView({collection:map});
+			var mapView = new views.MapView({collection:game.map});
 			
 			$("body").append(mapView.render().el);
 			console.log("initial render done");
