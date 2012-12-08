@@ -1,12 +1,14 @@
 views = {};
 
 views.selectedUnitView = null;
-
+views.curMap = null;
 views.setSelectedUnitView = function(unitView) {
   
   if(!_.isNull(views.selectedUnitView)) {
     views.selectedUnitView.selected = false;
     views.selectedUnitView.render();
+    
+    views.curMap.toggleTileMouseovers(false, views.selectedUnitView.model.get("team"));
   }
   
   views.selectedUnitView = unitView;
@@ -14,6 +16,8 @@ views.setSelectedUnitView = function(unitView) {
   if(!_.isNull(unitView)) {
     unitView.selected = true;
     unitView.render();
+    
+    views.curMap.toggleTileMouseovers(true, unitView.model.get("team"));
   }
 }
 
@@ -99,6 +103,11 @@ views.MapView = Backbone.View.extend({
   
   className: "map",
   
+  initialize: function(params) {
+    Backbone.View.prototype.initialize.call(this, params);
+    views.curMap = this;
+  },
+  
   render: function() {
     this.$el.html();
     
@@ -124,6 +133,13 @@ views.MapView = Backbone.View.extend({
     }
     
     return this;
-  }
+  },
   
+  toggleTileMouseovers: function(enable, team) {
+    if(enable) {
+      this.$el.find(".tile").addClass("mouseover-" + team);
+    } else {
+      this.$el.find(".tile").removeClass("mouseover-" + team);
+    }
+  }
 });
