@@ -32,6 +32,8 @@ types.Unit = Backbone.Model.extend({
     this.getTile().setUnit(null);
     this.set("tile", newTile);
     newTile.setUnit(this);
+    this.set("x", newTile.get("x"));
+    this.set("y", newTile.get("y"));
   },
   
   
