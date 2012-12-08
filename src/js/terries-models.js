@@ -39,13 +39,17 @@ types.Unit = Backbone.Model.extend({
   
   moveTowardsTarget: function() {
     if(this.has("targetX") && this.has("targetY")) {
-    
+      
+      
       // move towards the target. some vector math shit here.
       // draw a vector to the target, normalize it
       var target = new Vec2(this.get("targetX"), this.get("targetY"));
       var pos = new Vec2(this.get("x"), this.get("y"));
-    
+      
+      if(target.x==pos.x && target.y==pos.y) return;
+      
       target = target.subV(pos);
+      
       target.normalize();
       this.moveBy(Math.round(target.x), Math.round(target.y));
     }

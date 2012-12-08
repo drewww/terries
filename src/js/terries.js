@@ -5,6 +5,8 @@ function TerriesGame() {
 	this.map = new types.Map(null, {width:50, height: 50});
   this.map.createUnitAt(10, 10, 0);
   this.map.createUnitAt(30, 30, 1);
+  
+  setInterval(_.bind(this.tick, this), 1000);
 }
 
 TerriesGame.prototype.tick = function() {
