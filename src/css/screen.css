@@ -34,11 +34,11 @@
   height: 10px;
 }
 
-.tile.mouseover-0:hover {
+.tile.target-0, .tile.mouseover-0:hover {
   background-color: #55ff55;
 }
 
-.tile.mouseover-1:hover {
+.tile.target-1, .tile.mouseover-1:hover {
   background-color: #5555ff;
 }
 

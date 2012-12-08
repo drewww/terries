@@ -68,6 +68,7 @@ views.TileView = Backbone.View.extend({
   initialize: function(params) {
     Backbone.View.prototype.initialize.call(this, params);
     this.model.bind("change", function() {
+      console.log("changed: " + JSON.stringify(this.model.changedAttributes()));
       console.log("render: " + this.model.get("x") + "x" + this.model.get("y"));
       this.render();
     }, this);
@@ -84,6 +85,15 @@ views.TileView = Backbone.View.extend({
         this.$el.append(unitView.render().el);
       }
     }
+    
+    if(this.model.has("isTargetForTeam")) {
+      var team = this.model.get("isTargetForTeam");
+      this.$el.addClass("target-" + team);
+    } else {
+      this.$el.removeClass("target-1");
+      this.$el.removeClass("target-0");
+    }
+    
     return this;
   },
   
@@ -92,8 +102,8 @@ views.TileView = Backbone.View.extend({
     
     // if there's a selected unit, set its target.
     if(!_.isNull(views.selectedUnitView)) {
-      views.selectedUnitView.model.set("targetX", this.model.get("x"));
-      views.selectedUnitView.model.set("targetY", this.model.get("y"));
+      views.selectedUnitView.model.setTarget(this.model.get("x"),
+        this.model.get("y"));
       views.setSelectedUnitView(null);
     }
   }
