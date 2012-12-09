@@ -23,7 +23,8 @@
 		"commander" : "*",
 		"express" : "*",
 		"underscore" : "*",
-		"ejs" : "*"
+		"ejs" : "*",
+		"sockjs": "*"
 	},
 
 	"devDependencies": {

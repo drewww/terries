@@ -23,8 +23,23 @@
 
 		var map;
 		var game;
+		var sock;
 		$(document).ready(function() {
 			console.log("loaded");
+			
+			sock = new SockJS('http://' + host + ":" + port + "/sock");
+			
+			sock.onopen = function() {
+				console.log("SOCK OPEN");
+			}
+			
+			sock.onclose = function() {
+				console.log("SOCK CLOSE");
+			}
+			
+			sock.onmessage = function(e) {
+				console.log("message: " + JSON.stringify(e.data));
+			}
 			
 			game = new TerriesGame();
 			
