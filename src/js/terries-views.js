@@ -65,7 +65,6 @@ views.UnitView = Backbone.View.extend({
       this.$el.removeClass("selected");
     }
     
-    console.log("disabled: " + this.model.get("disabled") + " id: " + this.model.id);
     this.$el.css({opacity:1.0-(0.9*(this.model.get("disabled")/5))});
     
     return this;
