@@ -170,7 +170,14 @@ views.TileView = Backbone.View.extend({
       
       views.selectedUnitView.model.setTarget(this.model.get("x"),
         this.model.get("y"));
+        
+      // SEND THE DATA TO THE SERVER
+      sock.send(JSON.stringify({type:"move", id:views.selectedUnitView.model.id,
+        target:{x:this.model.get("x"), y:this.model.get("y")}}));
+        
+        
       views.setSelectedUnitView(null);
+      
     }
   }
 });
