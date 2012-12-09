@@ -47,7 +47,7 @@
   
   position: relative;
   
-  overflow: none;
+  overflow: hidden;
 }
 
 .tile.target-0, .tile.mouseover-0:hover {

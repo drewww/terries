@@ -29,7 +29,6 @@ TerriesGame.prototype.tick = function() {
         }
         
         var newOwnership = tile.get("ownership")+ownershipIncrement;
-        console.log("newOwnership: " +newOwnership);
         tile.set("ownership", newOwnership);
       }
     });

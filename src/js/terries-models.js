@@ -21,7 +21,7 @@ types.Unit = Backbone.Model.extend({
     types.nextUnitId++;
     
     this.on("change", function() {
-      console.log("changed: "+ JSON.stringify(this.changedAttributes()));
+      // console.log("changed: "+ JSON.stringify(this.changedAttributes()));
     }, this);
     
     var tile = types.curMap.getTile(this.get("x"), this.get("y"));
@@ -30,7 +30,7 @@ types.Unit = Backbone.Model.extend({
   
   
   moveBy: function(dX, dY) {
-    console.log("moving by: " + dX + "-" + dY);
+    // console.log("moving by: " + dX + "-" + dY);
     
     var newTile = this.getTile().getAdjacentTile(dX, dY);
     this.getTile().setUnit(null);
@@ -116,7 +116,7 @@ types.Tile = Backbone.Model.extend({
         if(ownership==1) capturedBy = types.TEAM_ONE;
         if(ownership==-1) capturedBy = types.TEAM_ZERO;
         
-        this.trigger("captured", capturedBy);
+        this.trigger("captured", capturedBy, this);
       } else if(ownership==0) {
         // this is basically decapping
         this.trigger("captured", types.NEUTRAL);
@@ -219,10 +219,10 @@ types.Map = Backbone.Collection.extend({
           
         }, this);
         
-        newTile.bind("captured", function(capturedBy) {
+        newTile.bind("captured", function(capturedBy, tile) {
           // if this tile gets captured, flip ownership on its
           // zone object, and trigger a zone-captured event.
-          var zone = this.zones.get(newTile.get("zone"));
+          var zone = this.zones.get(tile.get("zone"));
           
           if(zone.get("ownership")!=capturedBy) {
             zone.set("ownership", capturedBy)
