@@ -31,13 +31,14 @@
   border-radius: 9px;
 }
 
-.tile.even {
+/*.tile.even {
   background-color: white;
 }
 
 .tile.odd {
   background-color: #efefef;
 }
+*/
 
 .tile {
   float: left;

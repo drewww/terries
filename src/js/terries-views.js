@@ -61,6 +61,7 @@ views.UnitView = Backbone.View.extend({
 
 views.TileView = Backbone.View.extend({
   className: "tile",
+  ownership: null,
   
   events: {
     "click":"clicked"
@@ -70,7 +71,7 @@ views.TileView = Backbone.View.extend({
     Backbone.View.prototype.initialize.call(this, params);
     this.model.bind("change", function() {
       console.log("changed: " + JSON.stringify(this.model.changedAttributes()));
-      console.log("render: " + this.model.get("x") + "x" + this.model.get("y"));
+      // console.log("render: " + this.model.get("x") + "x" + this.model.get("y"));
       this.render();
     }, this);
   },
@@ -103,6 +104,9 @@ views.TileView = Backbone.View.extend({
       this.$el.addClass("flag");
     }
     
+    // sort of weird; tile ownership is tied to the flag,
+    // ownership in the view is tied to the zone. should
+    // probably sort that out at some point.
     var ownership = this.model.get("ownership");
     var fraction = 0;
     
@@ -117,6 +121,16 @@ views.TileView = Backbone.View.extend({
       
       ownershipDiv.css("top", 10-10*(Math.abs(ownership)));
       this.$el.append(ownershipDiv);
+    }
+    
+    var zoneOwnership = this.model.get("zoneOwnership");
+    if(zoneOwnership==types.TEAM_ONE) {
+      this.$el.addClass("zone-owned-1");
+    } else if(zoneOwnership==types.TEAM_ZERO) {
+      this.$el.addClass("zone-owned-0");
+    } else {
+      this.$el.removeClass("zone-owned-0");
+      this.$el.removeClass("zone-owned-1");
     }
     
     return this;
@@ -146,6 +160,16 @@ views.MapView = Backbone.View.extend({
   initialize: function(params) {
     Backbone.View.prototype.initialize.call(this, params);
     views.curMap = this;
+    
+    this.collection.bind("zone:captured", function(zoneId) {
+      var zone = this.collection.zones.get(zoneId);
+      // mark all the tiles in that zone as captured.
+      var zoneTiles = this.getTilesForZone(zoneId);
+      _.each(zoneTiles, function(tile) {
+        tile.set("zoneOwnership", zone.get("ownership"));
+      });
+      
+    }, this);
   },
   
   render: function() {
@@ -181,5 +205,12 @@ views.MapView = Backbone.View.extend({
     } else {
       this.$el.find(".tile").removeClass("mouseover-" + team);
     }
+  },
+  
+  getTilesForZone: function(zone) {
+    return this.collection.filter(function(tile) {
+      if(tile.get("zone")==zone) return true;
+    });
   }
+  
 });

@@ -1,4 +1,8 @@
+
 types = {};
+types.TEAM_ONE = 1;
+types.TEAM_ZERO = -1;
+types.NEUTRAL = 0;
 
 types.curMap = null;
 types.nextUnitId = 0;
@@ -92,7 +96,8 @@ types.Tile = Backbone.Model.extend({
     isTargetForTeam: null,
     flag: null,
     zone: null,
-    ownership: 0
+    ownership: 0,
+    zoneOwnership: null,
   },
   
   initialize: function(attributes) {
@@ -100,8 +105,23 @@ types.Tile = Backbone.Model.extend({
     this.set("id", this.get("x") + "x" + this.get("y"));
     
     this.bind("change:ownership", function() {
-      if(this.get("ownership")>1) this.set("ownership", 1);
-      if(this.get("ownership")<-1) this.set("ownership", -1);
+      var ownership = this.get("ownership");
+      
+      if(ownership>1) this.set("ownership", 1);
+      if(ownership<-1) this.set("ownership", -1);
+      
+      if(Math.abs(ownership)==1) {
+        // trigger a captured event.
+        var capturedBy = types.NEUTRAL;
+        if(ownership==1) capturedBy = types.TEAM_ONE;
+        if(ownership==-1) capturedBy = types.TEAM_ZERO;
+        
+        this.trigger("captured", capturedBy);
+      } else if(ownership==0) {
+        // this is basically decapping
+        this.trigger("captured", types.NEUTRAL);
+      }
+      
     }, this);
   },
   
@@ -139,8 +159,18 @@ types.Tile = Backbone.Model.extend({
   
 });
 
+types.Zone = Backbone.Model.extend({
+  defaults: {
+    ownership: types.NEUTRAL,
+  }
+});
+
 types.UnitCollection = Backbone.Collection.extend({
   model:types.Unit
+});
+
+types.ZoneCollection = Backbone.Collection.extend({
+  model:types.Zone
 });
 
 types.Map = Backbone.Collection.extend({
@@ -149,6 +179,7 @@ types.Map = Backbone.Collection.extend({
   width:0,
   height:0,
   units: null,
+  zones: null,
   unitSelected: null,
   
   initialize: function(models, options) {
@@ -156,12 +187,14 @@ types.Map = Backbone.Collection.extend({
     types.curMap = this;
     options = _.defaults(options, {width:200, height:400});
     
+    this.zones = new types.ZoneCollection();
+    
     this.width = options.width;
     this.height = options.height;
     
     var zoneWidth = Math.floor(this.width/3);
     var zoneHeight = Math.floor(this.height/3);
-    
+
     // now generate tiles.
     for(var y=0; y<this.height; y++) {
       for(var x=0; x<this.width; x++) {
@@ -169,6 +202,11 @@ types.Map = Backbone.Collection.extend({
         var zoneX = Math.floor(x/zoneWidth);
         var zoneY = Math.floor(y/zoneHeight);
         var zone = zoneX + 3*zoneY;
+        
+        if(_.isUndefined(this.zones.get(zone))) {
+          var newZone = new types.Zone({id:zone});
+          this.zones.add(newZone);
+        }
         
         var newTile = new types.Tile({x:x, y:y, zone:zone});
         
@@ -179,6 +217,19 @@ types.Map = Backbone.Collection.extend({
             this.unitSelected.setTarget(tile.get("x"), tile.get("y"));
           }
           
+        }, this);
+        
+        newTile.bind("captured", function(capturedBy) {
+          // if this tile gets captured, flip ownership on its
+          // zone object, and trigger a zone-captured event.
+          var zone = this.zones.get(newTile.get("zone"));
+          
+          if(zone.get("ownership")!=capturedBy) {
+            zone.set("ownership", capturedBy)
+            
+            console.log("zone captured: " + zone.id);
+            this.trigger("zone:captured", zone.id);
+          }
         }, this);
         
         this.add(newTile);
@@ -202,6 +253,6 @@ types.Map = Backbone.Collection.extend({
   createFlagAt: function(x, y) {
     var tile = this.getTile(x, y);
     tile.set("flag", true);
-  }
+  },
   
 });
