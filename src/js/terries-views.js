@@ -15,6 +15,7 @@ views.setSelectedUnitView = function(unitView) {
   
   if(!_.isNull(unitView)) {
     unitView.selected = true;
+    unitView.model.setTarget(null, null);
     unitView.render();
     
     views.curMap.toggleTileMouseovers(true, unitView.model.get("team"));
@@ -126,6 +127,11 @@ views.TileView = Backbone.View.extend({
     
     // if there's a selected unit, set its target.
     if(!_.isNull(views.selectedUnitView)) {
+      var curTargetTile = types.curMap.getTile(
+        views.selectedUnitView.model.get("targetX"),
+        views.selectedUnitView.model.get("targetY"));
+      curTargetTile.set("isTargetForTeam", null);
+      
       views.selectedUnitView.model.setTarget(this.model.get("x"),
         this.model.get("y"));
       views.setSelectedUnitView(null);

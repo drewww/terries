@@ -27,6 +27,8 @@
   left: -4px;
   width: 18px;
   height: 18px;
+  z-index: 10;
+  border-radius: 9px;
 }
 
 .tile.even {

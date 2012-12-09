@@ -73,9 +73,11 @@ types.Unit = Backbone.Model.extend({
     this.set("targetX", x);
     this.set("targetY", y);
     
-    // set target on the tile.
-    var targetTile = types.curMap.getTile(x, y);
-    targetTile.set("isTargetForTeam", this.get("team"));
+    if(!_.isNull(x) && !_.isNull(y)){
+      // set target on the tile.
+      var targetTile = types.curMap.getTile(x, y);
+      targetTile.set("isTargetForTeam", this.get("team"));
+    }
   }
   
 });
