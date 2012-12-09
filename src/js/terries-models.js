@@ -13,6 +13,7 @@ types.Unit = Backbone.Model.extend({
     targetY: null,
     x: null,
     y: null,
+    disabled: 0
   },
   
   initialize: function(attributes) {
@@ -46,11 +47,12 @@ types.Unit = Backbone.Model.extend({
       console.log("at target!");
       
       this.setTarget(null, null);
-      // this.set("targetX", null);
-      // this.set("targetY", null);
-      // 
-      // var targetTile = types.curMap.getTile(this.get("x"), this.get("y"));
-      // targetTile.set("isTargetForTeam", null);
+    }
+    
+    // if we're disabled, don't move, just work down the disabled counter.
+    if(this.get("disabled")>0) {
+      this.set("disabled", this.get("disabled")-1);
+      return;
     }
     
     if(this.has("targetX") && this.has("targetY")) {
@@ -68,6 +70,11 @@ types.Unit = Backbone.Model.extend({
       target.normalize();
       this.moveBy(Math.round(target.x), Math.round(target.y));
     }
+  },
+  
+  disableFor: function(ticks) {
+    console.log("disabling unit");
+    this.set("disabled", ticks);
   },
   
   getTile: function() {

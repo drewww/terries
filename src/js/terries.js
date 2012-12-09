@@ -39,9 +39,24 @@ TerriesGame.prototype.tick = function() {
         // check and see if adjacent unit is enemy
         if(adjacentUnit.get("team")!=unit.get("team")) {
           // check and see if they're in the same zone (to avoid border issues)
-          
           if(adjacentUnit.getTile().get("zone")==unitTile.get("zone")) {
-            console.log("REPEL!!!");
+            // the question now is, what do we do in a fight?
+            // 1. disable the losing unit
+            // 2. push the unit somewhere:
+            //      some fixed distance away
+            //      move in a direction until it hits a friendly zone
+            //        (this is risky, it could be a super-long distance)
+            //      moves to the nearest friendly zone
+            //        (I like this best, but it's a bit tricky to calculate)
+            //      moves to where it was 5 moves ago
+            //        (this has some interesting counterplay options, but also
+            //         might make it impossible to get away?)
+            //
+            // for now, we'll do a disable and play with these mechanics later
+            // only disable if they're not ALREADY disabled.
+            if(adjacentUnit.get("disabled")==0) {
+              adjacentUnit.disableFor(5);
+            }
           }
         }
         

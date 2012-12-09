@@ -45,9 +45,11 @@ views.UnitView = Backbone.View.extend({
     "click":"clicked"
   },
   
-  intialize: function(params) {
+  initialize: function(params) {
     Backbone.View.prototype.initialize.call(this, params);
-    this.model.bind("change", this.render, this);
+    this.model.bind("change", function() {
+      this.render();
+    }, this);
   },
   
   render: function() {
@@ -63,13 +65,18 @@ views.UnitView = Backbone.View.extend({
       this.$el.removeClass("selected");
     }
     
+    console.log("disabled: " + this.model.get("disabled"));
+    this.$el.css({opacity:1.0-(0.9*(this.model.get("disabled")/5))});
+    
     return this;
   },
   
   clicked: function(event) {
-    this.trigger("clicked", this);
+    if(this.model.get("disabled")==0) {
+      this.trigger("clicked", this);
+      views.setSelectedUnitView(this);
+    }
     
-    views.setSelectedUnitView(this);
     event.stopPropagation();
   }
   
