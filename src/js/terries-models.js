@@ -110,16 +110,23 @@ types.Tile = Backbone.Model.extend({
       if(ownership>1) this.set("ownership", 1);
       if(ownership<-1) this.set("ownership", -1);
       
-      if(Math.abs(ownership)==1) {
+      if(Math.abs(ownership)>=1) {
         // trigger a captured event.
         var capturedBy = types.NEUTRAL;
-        if(ownership==1) capturedBy = types.TEAM_ONE;
-        if(ownership==-1) capturedBy = types.TEAM_ZERO;
+        if(ownership>=1) {
+          capturedBy = types.TEAM_ONE;
+          this.set("ownership", 1);
+        }
+        if(ownership<=-1) {
+          capturedBy = types.TEAM_ZERO;
+          this.set("ownership", -1);
+        }
         
         this.trigger("captured", capturedBy, this);
-      } else if(ownership==0) {
+      } else if(ownership<0.05 && ownership>=-0.05) {
         // this is basically decapping
-        this.trigger("captured", types.NEUTRAL);
+        this.set("ownership", 0);
+        this.trigger("captured", types.NEUTRAL, this);
       }
       
     }, this);

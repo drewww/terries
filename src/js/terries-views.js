@@ -70,7 +70,7 @@ views.TileView = Backbone.View.extend({
   initialize: function(params) {
     Backbone.View.prototype.initialize.call(this, params);
     this.model.bind("change", function() {
-      console.log("changed: " + JSON.stringify(this.model.changedAttributes()));
+      // console.log("changed: " + JSON.stringify(this.model.changedAttributes()));
       // console.log("render: " + this.model.get("x") + "x" + this.model.get("y"));
       this.render();
     }, this);
