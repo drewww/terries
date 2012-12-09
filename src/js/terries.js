@@ -39,7 +39,8 @@ TerriesGame.prototype.tick = function() {
         // check and see if adjacent unit is enemy
         if(adjacentUnit.get("team")!=unit.get("team")) {
           // check and see if they're in the same zone (to avoid border issues)
-          if(adjacentUnit.getTile().get("zone")==tile.get("zone")) {
+          
+          if(adjacentUnit.getTile().get("zone")==unitTile.get("zone")) {
             console.log("REPEL!!!");
           }
         }
