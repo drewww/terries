@@ -47,7 +47,7 @@ views.UnitView = Backbone.View.extend({
   
   initialize: function(params) {
     Backbone.View.prototype.initialize.call(this, params);
-    this.model.bind("change", function() {
+    this.model.bind("change:disabled", function() {
       this.render();
     }, this);
   },
@@ -65,7 +65,7 @@ views.UnitView = Backbone.View.extend({
       this.$el.removeClass("selected");
     }
     
-    console.log("disabled: " + this.model.get("disabled"));
+    console.log("disabled: " + this.model.get("disabled") + " id: " + this.model.id);
     this.$el.css({opacity:1.0-(0.9*(this.model.get("disabled")/5))});
     
     return this;

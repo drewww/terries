@@ -31,9 +31,14 @@ types.Unit = Backbone.Model.extend({
   
   
   moveBy: function(dX, dY) {
-    // console.log("moving by: " + dX + "-" + dY);
-    
     var newTile = this.getTile().getAdjacentTile(dX, dY);
+    
+    // cancel the move if the tile is occupied. also, cancel the target.
+    if(newTile.isOccupied()) {
+      this.setTarget(null, null);
+      return;
+    }
+    
     this.getTile().setUnit(null);
     this.set("tile", newTile);
     newTile.setUnit(this);
@@ -168,6 +173,11 @@ types.Tile = Backbone.Model.extend({
     } else {
       this.set("unitId", unit.id);
     }
+  },
+  
+  isOccupied: function() {
+    if(this.has("flag")) return true;
+    if(this.has("unitId")) return true;
   },
   
   getAdjacentTile: function(dX, dY) {
