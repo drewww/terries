@@ -73,7 +73,7 @@ sockjs.on('connection', function(conn) {
         // every ten seconds, dump current unit states.
         console.log("BROADCAST");
         broadcast({type:"update", units:units});
-      }, 10000);
+      }, 15000);
     }
   }
   

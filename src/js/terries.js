@@ -32,6 +32,7 @@ function TerriesGame(sock) {
       case "welcome":
         // set which units we're allowed to control.
         this.team = msg.team;
+        this.map.playingAsTeam = this.team;
         console.log("set to team " + this.team);
         break;
       

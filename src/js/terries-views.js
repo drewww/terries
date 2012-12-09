@@ -71,12 +71,18 @@ views.UnitView = Backbone.View.extend({
   },
   
   clicked: function(event) {
-    if(this.model.get("disabled")==0) {
-      this.trigger("clicked", this);
-      views.setSelectedUnitView(this);
-    }
     
-    event.stopPropagation();
+    // check and see if we're on the right team and allowed to select those
+    // units.
+    if(types.curMap.playingAsTeam==this.model.get("team")) {
+      
+      if(this.model.get("disabled")==0) {
+        this.trigger("clicked", this);
+        views.setSelectedUnitView(this);
+      }
+      
+      event.stopPropagation();
+    }
   }
   
 });

@@ -228,6 +228,7 @@ types.Map = Backbone.Collection.extend({
   units: null,
   zones: null,
   unitSelected: null,
+  playingAsTeam: 0,
   
   initialize: function(models, options) {
     Backbone.Collection.prototype.initialize.call(this, models, options);
