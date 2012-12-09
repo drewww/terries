@@ -1,15 +1,24 @@
 
-.unit.team0 {
+.ownership.team0, .unit.team0 {
   background-color: green;
 }
 
-.unit.team1 {
+.ownership.team1, .unit.team1 {
   background-color: blue;
+}
+
+.ownership {
+  position: absolute;
+  left: 2;
+  width: 6px;
+  height: 6px;
 }
 
 .unit {
   width: 10px;
   height: 10px;
+  
+  border-radius: 5px;
 }
 
 .unit.selected {
@@ -32,6 +41,10 @@
   float: left;
   width: 10px;
   height: 10px;
+  
+  position: relative;
+  
+  overflow: none;
 }
 
 .tile.target-0, .tile.mouseover-0:hover {
@@ -42,6 +55,23 @@
   background-color: #5555ff;
 }
 
+.zone-owned-0 {
+  background-color: #ccffcc;
+}
+
+.zone-owned-1 {
+  background-color: #ccccff;
+}
+
+.tile.flag {
+  border: 2px solid black;
+  width: 6px;
+  height: 6px;
+}
+
+.tile.impassable {
+  background-color: black;
+}
 
 br.clear {
     content: ".";

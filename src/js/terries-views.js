@@ -94,6 +94,30 @@ views.TileView = Backbone.View.extend({
       this.$el.removeClass("target-0");
     }
     
+    if(this.model.has("zone")) {
+      this.$el.addClass("zone-" + this.model.get("zone"));
+    }
+    
+    if(this.model.has("flag")) {
+      this.$el.addClass("flag");
+    }
+    
+    var ownership = this.model.get("ownership");
+    var fraction = 0;
+    
+    if(ownership!=0) {
+      var ownershipDiv = $('<div class="ownership"></div>');
+      
+      if(ownership > 0) {
+        ownershipDiv.addClass("team1");
+      } else if (ownership < 0) {
+        ownershipDiv.addClass("team0");
+      }
+      
+      ownershipDiv.css("top", 10-10*(Math.abs(ownership)));
+      this.$el.append(ownershipDiv);
+    }
+    
     return this;
   },
   

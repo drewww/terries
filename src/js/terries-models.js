@@ -88,11 +88,19 @@ types.Tile = Backbone.Model.extend({
     x: -1,
     y: -1,
     isTargetForTeam: null,
+    flag: null,
+    zone: null,
+    ownership: 0
   },
   
   initialize: function(attributes) {
     Backbone.Model.prototype.initialize.call(this, attributes);
     this.set("id", this.get("x") + "x" + this.get("y"));
+    
+    this.bind("change:ownership", function() {
+      if(this.get("ownership")>1) this.set("ownership", 1);
+      if(this.get("ownership")<-1) this.set("ownership", -1);
+    }, this);
   },
   
   setUnit: function(unit) {
@@ -110,7 +118,23 @@ types.Tile = Backbone.Model.extend({
     if(dY < -1) dY=-1;
     
     return types.curMap.getTile(this.get("x") + dX, this.get("y") + dY);
+  },
+  
+  getAllAdjacentTiles: function() {
+    var tiles = [];
+    
+    tiles.push(this.getAdjacentTile(1, 1));
+    tiles.push(this.getAdjacentTile(1, 0));
+    tiles.push(this.getAdjacentTile(0, 1));
+    tiles.push(this.getAdjacentTile(-1,-1));
+    tiles.push(this.getAdjacentTile(-1, 0));
+    tiles.push(this.getAdjacentTile(0, -1));
+    tiles.push(this.getAdjacentTile(-1, 1));
+    tiles.push(this.getAdjacentTile(1, -1));
+    
+    return tiles;
   }
+  
 });
 
 types.UnitCollection = Backbone.Collection.extend({
@@ -132,10 +156,19 @@ types.Map = Backbone.Collection.extend({
     
     this.width = options.width;
     this.height = options.height;
+    
+    var zoneWidth = Math.floor(this.width/3);
+    var zoneHeight = Math.floor(this.height/3);
+    
     // now generate tiles.
     for(var y=0; y<this.height; y++) {
       for(var x=0; x<this.width; x++) {
-        var newTile = new types.Tile({x:x, y:y});
+        
+        var zoneX = Math.floor(x/zoneWidth);
+        var zoneY = Math.floor(y/zoneHeight);
+        var zone = zoneX + 3*zoneY;
+        
+        var newTile = new types.Tile({x:x, y:y, zone:zone});
         
         newTile.bind("clicked", function(tile) {
           
@@ -162,6 +195,11 @@ types.Map = Backbone.Collection.extend({
   createUnitAt: function(x, y, team) {
     var unit = new types.Unit({team:team, x:x, y:y});
     this.units.add(unit);
+  },
+  
+  createFlagAt: function(x, y) {
+    var tile = this.getTile(x, y);
+    tile.set("flag", true);
   }
   
 });
