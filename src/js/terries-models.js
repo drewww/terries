@@ -82,6 +82,10 @@ types.Unit = Backbone.Model.extend({
     }
   },
   
+  isInOwnedTerritory: function() {
+    return this.getTile().get("zoneOwnership")==this.get("team");
+  },
+  
   setTarget: function(x, y) {
     
     if(!_.isNull(x) && !_.isNull(y)) {
@@ -102,10 +106,7 @@ types.Unit = Backbone.Model.extend({
     
     this.set("targetX", x);
     this.set("targetY", y);
-    
-    
   }
-  
 });
 
 types.Tile = Backbone.Model.extend({

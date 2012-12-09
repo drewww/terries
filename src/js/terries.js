@@ -21,8 +21,6 @@ TerriesGame.prototype.tick = function() {
     
     // now check and see if there is an adjacent flag to any of the units.
     var unitTile = unit.getTile();
-    // var unitIsInOwnedTerritory = unitTile.get("zoneOwnership") == 
-    
     _.each(unitTile.getAllAdjacentTiles(), function(tile) {
       if(tile.has("flag")) {
         var ownershipIncrement = 0.1;
@@ -34,8 +32,19 @@ TerriesGame.prototype.tick = function() {
         tile.set("ownership", newOwnership);
       }
       
-      // check and see if there's an adjacent unit
-      if(tile.has("unitId")) {
+      // check and see if there's an adjacent unit.
+      if(tile.has("unitId") && unit.isInOwnedTerritory()) {
+        var adjacentUnit = types.curMap.units.get(tile.get("unitId"));
+        
+        // check and see if adjacent unit is enemy
+        if(adjacentUnit.get("team")!=unit.get("team")) {
+          // check and see if they're in the same zone (to avoid border issues)
+          if(adjacentUnit.getTile().get("zone")==tile.get("zone")) {
+            console.log("REPEL!!!");
+          }
+        }
+        
+        
         
         
       }
