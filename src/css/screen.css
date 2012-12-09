@@ -46,8 +46,6 @@
   height: 10px;
   
   position: relative;
-  
-  overflow: hidden;
 }
 
 .tile.target-0, .tile.mouseover-0:hover {
@@ -70,6 +68,7 @@
   border: 2px solid black;
   width: 6px;
   height: 6px;
+  overflow: hidden;
 }
 
 .tile.impassable {

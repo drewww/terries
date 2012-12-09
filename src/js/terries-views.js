@@ -4,11 +4,21 @@ views.selectedUnitView = null;
 views.curMap = null;
 views.setSelectedUnitView = function(unitView) {
   
+  var team;
+  
   if(!_.isNull(views.selectedUnitView)) {
+    
+    if(views.selectedUnitView.model.get("team")<0) {
+      team=0;
+    } else {
+      team=1;
+    }
+    
     views.selectedUnitView.selected = false;
     views.selectedUnitView.render();
     
-    views.curMap.toggleTileMouseovers(false, views.selectedUnitView.model.get("team"));
+    
+    views.curMap.toggleTileMouseovers(false, team);
   }
   
   views.selectedUnitView = unitView;
@@ -18,7 +28,13 @@ views.setSelectedUnitView = function(unitView) {
     unitView.model.setTarget(null, null);
     unitView.render();
     
-    views.curMap.toggleTileMouseovers(true, unitView.model.get("team"));
+    if(unitView.model.get("team")<0) {
+      team=0;
+    } else {
+      team=1;
+    }
+    
+    views.curMap.toggleTileMouseovers(true, team);
   }
 }
 
@@ -35,7 +51,7 @@ views.UnitView = Backbone.View.extend({
   },
   
   render: function() {
-    if(this.model.get("team")==0){
+    if(this.model.get("team")==types.TEAM_ZERO){
       this.$el.addClass("team0");
     } else {
       this.$el.addClass("team1");

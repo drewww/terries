@@ -8,7 +8,7 @@ types.curMap = null;
 types.nextUnitId = 0;
 types.Unit = Backbone.Model.extend({
   defaults: {
-    team: 0,
+    team: types.NEUTRAL,
     targetX: null,
     targetY: null,
     x: null,

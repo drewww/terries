@@ -3,7 +3,7 @@ function TerriesGame() {
   // make a new map.
   // eventually we'll be loading maps out of some sort of file.
 	this.map = new types.Map(null, {width:60, height: 60});
-  this.map.createUnitAt(5, 5, 0);
+  this.map.createUnitAt(5, 5, -1);
   this.map.createUnitAt(30, 30, 1);
   
   this.map.createFlagAt(10, 10);
@@ -21,16 +21,25 @@ TerriesGame.prototype.tick = function() {
     
     // now check and see if there is an adjacent flag to any of the units.
     var unitTile = unit.getTile();
+    // var unitIsInOwnedTerritory = unitTile.get("zoneOwnership") == 
+    
     _.each(unitTile.getAllAdjacentTiles(), function(tile) {
       if(tile.has("flag")) {
         var ownershipIncrement = 0.1;
-        if(unit.get("team")==0) {
+        if(unit.get("team")==types.TEAM_ZERO) {
           ownershipIncrement = -0.1;
         }
         
         var newOwnership = tile.get("ownership")+ownershipIncrement;
         tile.set("ownership", newOwnership);
       }
+      
+      // check and see if there's an adjacent unit
+      if(tile.has("unitId")) {
+        
+        
+      }
+      
     });
   });
   
