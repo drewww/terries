@@ -45,11 +45,12 @@ types.Unit = Backbone.Model.extend({
     if(this.get("x")==this.get("targetX") && this.get("y")==this.get("targetY")) {
       console.log("at target!");
       
-      this.set("targetX", null);
-      this.set("targetY", null);
-      
-      var targetTile = types.curMap.getTile(this.get("x"), this.get("y"));
-      targetTile.set("isTargetForTeam", null);
+      this.setTarget(null, null);
+      // this.set("targetX", null);
+      // this.set("targetY", null);
+      // 
+      // var targetTile = types.curMap.getTile(this.get("x"), this.get("y"));
+      // targetTile.set("isTargetForTeam", null);
     }
     
     if(this.has("targetX") && this.has("targetY")) {
@@ -73,15 +74,36 @@ types.Unit = Backbone.Model.extend({
     return types.curMap.getTile(this.get("x"), this.get("y"));
   },
   
+  getTeamIndex: function() {
+    if(this.get("team")==types.TEAM_ONE){
+      return 1;
+    } else {
+      return 0;
+    }
+  },
+  
   setTarget: function(x, y) {
+    
+    if(!_.isNull(x) && !_.isNull(y)) {
+      console.log("setting new target");
+      // set target on the tile.
+      var targetTile = types.curMap.getTile(x, y);
+      targetTile.set("isTargetForTeam", this.getTeamIndex());
+    } else {
+      console.log("clearing target");
+      var targetX = this.get("targetX");
+      var targetY = this.get("targetY");
+      
+      if(!_.isNull(targetX) && !_.isNull(targetY)) {
+        var targetTile = types.curMap.getTile(targetX, targetY);
+        targetTile.set("isTargetForTeam", null);
+      }
+    }
+    
     this.set("targetX", x);
     this.set("targetY", y);
     
-    if(!_.isNull(x) && !_.isNull(y)){
-      // set target on the tile.
-      var targetTile = types.curMap.getTile(x, y);
-      targetTile.set("isTargetForTeam", this.get("team"));
-    }
+    
   }
   
 });
