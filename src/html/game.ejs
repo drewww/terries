@@ -37,11 +37,7 @@
 				console.log("SOCK CLOSE");
 			}
 			
-			sock.onmessage = function(e) {
-				console.log("message: " + JSON.stringify(e.data));
-			}
-			
-			game = new TerriesGame();
+			game = new TerriesGame(sock);
 			
 			var mapView = new views.MapView({collection:game.map});
 			

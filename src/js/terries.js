@@ -1,4 +1,4 @@
-function TerriesGame() {
+function TerriesGame(sock) {
   
   // make a new map.
   // eventually we'll be loading maps out of some sort of file.
@@ -21,8 +21,40 @@ function TerriesGame() {
   this.map.createFlagAt(30, 50);
   this.map.createFlagAt(50, 50);
   
+  // wait for a start command
+  sock.onmessage = _.bind(function(e) {
+    var msg = JSON.parse(e.data);
+    // console.log("msg data: " + JSON.stringify(msg));
+    
+    switch(msg.type) {
+      case "welcome":
+        // set which units we're allowed to control.
+        this.team = msg.team;
+        console.log("set to team " + this.team);
+        break;
+      
+      case "start":
+        console.log("GAME ON");
+        
+        // allow selection now.
+        break;
+      case "update":
+        // update all the units with their new targets
+        _.each(msg.units, _.bind(function(value, key) {
+          var unit = this.map.units.get(value.id);
+          unit.setTarget(value.target.x, value.target.y);
+        }, this));
+        
+        // run the simulation 5 ticks
+        for(var i=0; i<5; i++) {
+          setTimeout(_.bind(this.tick, this), 200*i);
+        }
+        break;
+    }
+	}, this);
+	
   // we're going to wait for a 
-  setInterval(_.bind(this.tick, this), 500);
+  // setInterval(_.bind(this.tick, this), 500);
 }
 
 TerriesGame.prototype.tick = function() {

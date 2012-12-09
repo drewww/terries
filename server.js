@@ -67,12 +67,12 @@ sockjs.on('connection', function(conn) {
     
     if(players.length==2) {
       // START A GAME!
-      write(conn, {type:"start"});
+      broadcast({type:"start"});
       
       setInterval(function() {
         // every ten seconds, dump current unit states.
         console.log("BROADCAST");
-        broadcast(units);
+        broadcast({type:"update", units:units});
       }, 10000);
     }
   }
