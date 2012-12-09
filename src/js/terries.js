@@ -1,5 +1,7 @@
 function TerriesGame(sock) {
   
+  this.enabled = false;
+  
   // make a new map.
   // eventually we'll be loading maps out of some sort of file.
 	this.map = new types.Map(null, {width:60, height: 60});
@@ -37,8 +39,10 @@ function TerriesGame(sock) {
         console.log("GAME ON");
         
         // allow selection now.
+        this.setSelectionEnabled(true);
         break;
       case "update":
+        this.setSelectionEnabled(false);
         // update all the units with their new targets
         _.each(msg.units, _.bind(function(value, key) {
           var unit = this.map.units.get(value.id);
@@ -49,12 +53,28 @@ function TerriesGame(sock) {
         for(var i=0; i<5; i++) {
           setTimeout(_.bind(this.tick, this), 200*i);
         }
+        
+        setTimeout(_.bind(this.setSelectionEnabled, this), 5*200, true);
+        
         break;
     }
 	}, this);
 	
   // we're going to wait for a 
   // setInterval(_.bind(this.tick, this), 500);
+}
+
+TerriesGame.prototype.setSelectionEnabled = function(enabled) {
+  if(this.enabled!=enabled) {
+    
+    if(enabled) {
+      $(".selection-block").hide();
+    } else {
+      $(".selection-block").show();
+    }
+    
+    this.enabled = enabled;
+  }
 }
 
 TerriesGame.prototype.tick = function() {
