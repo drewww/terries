@@ -4,12 +4,24 @@ function TerriesGame() {
   // eventually we'll be loading maps out of some sort of file.
 	this.map = new types.Map(null, {width:60, height: 60});
   this.map.createUnitAt(5, 5, -1);
-  this.map.createUnitAt(30, 30, 1);
+  this.map.createUnitAt(10, 5, -1);
+  this.map.createUnitAt(5, 10, -1);
+
+  this.map.createUnitAt(55, 55, 1);
+  this.map.createUnitAt(50, 55, 1);
+  this.map.createUnitAt(55, 50, 1);
   
   this.map.createFlagAt(10, 10);
   this.map.createFlagAt(30, 10);
   this.map.createFlagAt(50, 10);
+  this.map.createFlagAt(10, 30);
+  this.map.createFlagAt(30, 30);
+  this.map.createFlagAt(50, 30);
+  this.map.createFlagAt(10, 50);
+  this.map.createFlagAt(30, 50);
+  this.map.createFlagAt(50, 50);
   
+  // we're going to wait for a 
   setInterval(_.bind(this.tick, this), 500);
 }
 
