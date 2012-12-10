@@ -5,6 +5,7 @@ types.TEAM_ZERO = -1;
 types.NEUTRAL = 0;
 
 types.curMap = null;
+types.curGame = null;
 types.nextUnitId = 0;
 
 
@@ -30,6 +31,20 @@ types.Game = Backbone.Model.extend({
       this.set("ownership", ownership);
       this.set("score", this.getScore());
     }, this);
+    
+    types.curGame = this;
+  },
+  
+  zoneOwnedByPlayer: function(zone) {
+    var ownership = this.get("ownership");
+    if(zone in ownership) {
+      return ownership[zone]==types.curMap.playingAsTeam;
+    } else {
+      // no one owns it
+      return false;
+    }
+    
+    return this.get("ownership")[zone]
   },
   
   getScore: function() {
@@ -405,7 +420,7 @@ types.Map = Backbone.Collection.extend({
       } else {
         // it's enemy movement. check and see if it should trigger a
         // notification.
-        
+        this.trigger("enemy-border-cross", toZone);
       }
       
       

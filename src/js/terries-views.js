@@ -262,6 +262,23 @@ views.MapView = Backbone.View.extend({
       });
       
     }, this);
+    
+    this.collection.bind("enemy-border-cross", function(intoZone) {
+      // flash the tiles in this zone.
+      
+      // TODO check if it should be visible
+      console.log("ENEMY BORDER CROSS IN ZONE: " + intoZone);
+      if(types.curGame.zoneOwnedByPlayer(intoZone)) {
+        this.$el.find(".zone-"+intoZone).addClass("trespassing");
+        console.log("ENEMY BORDER CROSS IN ZONE WE OWN: " + intoZone);
+      }
+    }, this);
+    
+  },
+  
+  clearTrespassing: function() {
+    console.log("CLEAR TRESPASSING");
+    $(".trespassing").removeClass("trespassing");
   },
   
   render: function() {

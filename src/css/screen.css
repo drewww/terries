@@ -59,18 +59,26 @@
 }
 
 .tile.target-0, .tile.mouseover-0:hover {
-  background-color: #55ff55;
+/*  background-color: #55ff55;*/
+  border: 2px solid #55ff55;
+  border-radius: 3px;
+  width: 6px;
+  height: 6px;
 }
 
 .tile.target-1, .tile.mouseover-1:hover {
-  background-color: #5555ff;
+/*  background-color: #5555ff;*/
+  border: 2px solid #5555ff;
+  border-radius: 3px;
+  width: 6px;
+  height: 6px;
 }
 
-.zone-owned-0 {
+.tile.zone-owned-0 {
   background-color: #ccffcc;
 }
 
-.zone-owned-1 {
+.tile.zone-owned-1 {
   background-color: #ccccff;
 }
 
@@ -83,6 +91,16 @@
 
 .tile.impassable {
   background-color: black;
+}
+
+.tile {
+  background-color: #eee;
+}
+
+.tile.trespassing {
+  border: 1px solid #ddd;
+  width: 8px;
+  height: 8px;
 }
 
 .scoreboard {

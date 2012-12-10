@@ -65,6 +65,7 @@ function TerriesGame(sock) {
         break;
       case "update":
         this.setSelectionEnabled(false);
+        views.curMap.clearTrespassing();
         // update all the units with their new targets
         _.each(msg.units, _.bind(function(value, key) {
           var unit = this.map.units.get(value.id);
@@ -153,12 +154,7 @@ TerriesGame.prototype.tick = function() {
             }
           }
         }
-        
-        
-        
-        
       }
-      
     });
   });
   
