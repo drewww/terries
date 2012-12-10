@@ -120,8 +120,10 @@ TerriesGame.prototype.tick = function() {
           ownershipIncrement = -0.1;
         }
         
-        var newOwnership = tile.get("ownership")+ownershipIncrement;
-        tile.set("ownership", newOwnership);
+        if(unit.get("disabled")==0) {
+          var newOwnership = tile.get("ownership")+ownershipIncrement;
+          tile.set("ownership", newOwnership);
+        }
       }
       
       // check and see if there's an adjacent unit.
