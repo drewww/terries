@@ -6,6 +6,84 @@ types.NEUTRAL = 0;
 
 types.curMap = null;
 types.nextUnitId = 0;
+
+
+types.Game = Backbone.Model.extend({
+  defaults: {
+    ownership: null,
+    timeToMove: 0,
+    gameTime: 0,
+    duration: 0,
+    score: null
+  },
+  
+  initialize: function(attributes) {
+    Backbone.Model.prototype.initialize.call(this, attributes);
+    
+    this.set("ownership", {});
+    this.set("score", [0, 0]);
+    // bind to the map for some events
+    types.curMap.bind("zone:captured", function(zoneId, capturedBy) {
+      // keep track of zone capture.
+      var ownership = this.get("ownership");
+      ownership[zoneId] = capturedBy;
+      this.set("ownership", ownership);
+      this.set("score", this.getScore());
+    }, this);
+  },
+  
+  getScore: function() {
+    var score = [0, 0];
+    console.log(JSON.stringify(this.get("ownership")));
+    _.each(this.get("ownership"), function(val, key) {
+      console.log("key: " + key + "; val: " + val);
+      if(val==-1) {
+        score[0] = score[0]+1;
+      } else {
+        score[1] = score[1]+1;
+      }
+    });
+    
+    return score;
+  },
+  
+  startMovePeriod: function(duration) {
+    this.set("timeToMove",duration);
+    setTimeout(_.bind(this.countdown, this), 1000);
+    this.turnOver();
+  },
+  
+  countdown: function() {
+    var val = this.get("timeToMove")-1;
+    this.set("timeToMove", val);
+    
+    if(val > 0) {
+      setTimeout(_.bind(this.countdown, this), 1000);
+    }
+  },
+  
+  start: function(gameDuration) {
+    // kick off the timeToMove time
+    this.set("gameTime", 0);
+    this.set("duration", gameDuration);
+  },
+  
+  turnOver: function() {
+    var turn = this.get("gameTime");
+    
+    turn++;
+    
+    if(turn==this.get("duration")) {
+      console.log("GAME OVER");
+      this.trigger("gameover");
+    } else {
+      this.set("gameTime", turn);
+    }
+  }
+  
+});
+
+
 types.Unit = Backbone.Model.extend({
   defaults: {
     team: types.NEUTRAL,
@@ -283,7 +361,7 @@ types.Map = Backbone.Collection.extend({
             zone.set("ownership", capturedBy)
             
             console.log("zone captured: " + zone.id);
-            this.trigger("zone:captured", zone.id);
+            this.trigger("zone:captured", zone.id, capturedBy);
           }
         }, this);
         

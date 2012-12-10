@@ -9,11 +9,11 @@
   z-index: 100;
 }
 
-.ownership.team0, .unit.team0 {
+.ownership.team0, .unit.team0, .score.team0 {
   background-color: green;
 }
 
-.ownership.team1, .unit.team1 {
+.ownership.team1, .unit.team1, .score.team1 {
   background-color: blue;
 }
 
@@ -83,6 +83,42 @@
 
 .tile.impassable {
   background-color: black;
+}
+
+.scoreboard {
+  width: 600px;
+  text-align: center;
+  font-family: Helvetica, sans-serif;
+
+}
+
+.score {
+  width: 100px;
+  height: 100px;
+  font-size: 4em;
+  color: white;
+  
+  font-weight: bold;
+}
+
+.score.team0 {
+  float: left;
+}
+
+.score.team1 {
+  float: right;
+}
+
+.gameTime, .turnTime{
+  height: 50px;
+  width: 400px;
+  background-color: #ddd;
+  color: black;
+  font-weight: bold;
+  font-size: 2em;
+  
+  float: left;
+  
 }
 
 br.clear {

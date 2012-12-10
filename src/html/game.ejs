@@ -40,7 +40,9 @@
 			game = new TerriesGame(sock);
 			
 			var mapView = new views.MapView({collection:game.map});
+			var gameView = new views.GameView({model:game.game});
 			
+			$("body").append(gameView.render().el);
 			$("body").append(mapView.render().el);
 			console.log("initial render done");
 		});

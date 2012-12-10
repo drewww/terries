@@ -5,6 +5,8 @@ function TerriesGame(sock) {
   // make a new map.
   // eventually we'll be loading maps out of some sort of file.
 	this.map = new types.Map(null, {width:60, height: 60});
+	this.game = new types.Game();
+	
   this.map.createUnitAt(5, 5, -1);
   this.map.createUnitAt(10, 5, -1);
   this.map.createUnitAt(5, 10, -1);
@@ -50,18 +52,14 @@ function TerriesGame(sock) {
           }
         }, this.map);
         
-        
-        
         console.log("set to team " + this.team);
-        
-        
         break;
       
       case "start":
         console.log("GAME ON");
         
-        
-        
+        this.game.start(20);
+        this.game.startMovePeriod(15);
         // allow selection now.
         this.setSelectionEnabled(true);
         break;
@@ -78,7 +76,10 @@ function TerriesGame(sock) {
           setTimeout(_.bind(this.tick, this), 200*i);
         }
         
-        setTimeout(_.bind(this.setSelectionEnabled, this), 5*200, true);
+        setTimeout(_.bind(function() {
+          this.setSelectionEnabled(this)
+          this.game.startMovePeriod(15);
+        }, this), 5*200, true);
         
         break;
     }

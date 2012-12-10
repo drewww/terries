@@ -218,8 +218,30 @@ views.TileView = Backbone.View.extend({
         
         
       views.setSelectedUnitView(null);
-      
     }
+  }
+});
+
+views.GameView = Backbone.View.extend({
+  className: "scoreboard",
+  
+  template: _.template('<div class="score team0"><%=score[0]%></div>\
+<div class="score team1"><%=score[1]%></div>\
+<div class="gameTime"><%=gameTime%></div><div class="turnTime"><%=timeToMove%></div>'),
+  
+  initialize: function(params) {
+    Backbone.View.prototype.initialize.call(this, params);
+    this.model.bind("change", function() {
+      this.render();
+    }, this);
+  },
+  
+  render: function() {
+    var json = this.model.toJSON();
+    // json["score"] = this.model.getScore();
+    this.$el.html(this.template(json));
+    
+    return this;
   }
 });
 
