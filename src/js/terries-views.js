@@ -145,9 +145,15 @@ views.TileView = Backbone.View.extend({
       }
     }
     
-    if(this.model.has("isTargetForTeam")) {
+    if(this.model.has("isTargetForTeam") && 
+      this.model.get("isTargetForTeam")==types.curMap.playingAsTeam) {
       var team = this.model.get("isTargetForTeam");
-      this.$el.addClass("target-" + team);
+      if(team==1) {
+        this.$el.addClass("target-1");
+      } else {
+        this.$el.addClass("target-0");
+      }
+      
     } else {
       this.$el.removeClass("target-1");
       this.$el.removeClass("target-0");
