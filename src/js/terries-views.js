@@ -53,6 +53,17 @@ views.UnitView = Backbone.View.extend({
   },
   
   render: function() {
+    
+    // this is where we'll figure out about visibility on the unit level.
+    // the rules are this:
+    // 1. you can see anything in a zone where you have a unit.
+    // (2). zones flash when enemies enter them.
+    
+    // to do this, we'll compose a list of "zones we have vision in" and only
+    // render ENEMY units when they're in one of those zones.  that will
+    // come from the map level. 
+    
+    
     if(this.model.get("team")==types.TEAM_ZERO){
       this.$el.addClass("team0");
     } else {

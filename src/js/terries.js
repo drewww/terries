@@ -33,11 +33,31 @@ function TerriesGame(sock) {
         // set which units we're allowed to control.
         this.team = msg.team;
         this.map.playingAsTeam = this.team;
+        
+        this.map.units.each(function(unit) {
+          var team = unit.get("team");
+          var zoneAddedTo = unit.getTile().get("zone");
+          
+          // update zone occupation data
+          if(team==this.playingAsTeam) {
+            var curOccupancy = 0;
+            if(zoneAddedTo in this.zonesOccupied) {
+              curOccupancy = this.zonesOccupied[zoneAddedTo];
+            }
+
+            curOccupancy++;
+            this.zonesOccupied[zoneAddedTo] = curOccupancy;
+          }
+        }, this.map);
+        
+        
         console.log("set to team " + this.team);
         break;
       
       case "start":
         console.log("GAME ON");
+        
+        
         
         // allow selection now.
         this.setSelectionEnabled(true);
@@ -79,6 +99,9 @@ TerriesGame.prototype.setSelectionEnabled = function(enabled) {
 }
 
 TerriesGame.prototype.tick = function() {
+  
+  // check zone occupancy list
+  console.log(JSON.stringify(this.map.zonesOccupied));
   
   // loop through each unit and tell it to move towards target.
   this.map.units.each(function(unit) {

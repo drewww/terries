@@ -39,6 +39,11 @@ types.Unit = Backbone.Model.extend({
       return;
     }
     
+    if(newTile.get("zone")!=this.getTile().get("zone")) {
+      this.trigger("border-cross", this.getTile().get("zone"),
+        newTile.get("zone"));
+    }
+    
     this.getTile().setUnit(null);
     this.set("tile", newTile);
     newTile.setUnit(this);
@@ -229,6 +234,7 @@ types.Map = Backbone.Collection.extend({
   zones: null,
   unitSelected: null,
   playingAsTeam: 0,
+  zonesOccupied: null,
   
   initialize: function(models, options) {
     Backbone.Collection.prototype.initialize.call(this, models, options);
@@ -236,6 +242,7 @@ types.Map = Backbone.Collection.extend({
     options = _.defaults(options, {width:200, height:400});
     
     this.zones = new types.ZoneCollection();
+    this.zonesOccupied = {};
     
     this.width = options.width;
     this.height = options.height;
@@ -296,6 +303,35 @@ types.Map = Backbone.Collection.extend({
   createUnitAt: function(x, y, team) {
     var unit = new types.Unit({team:team, x:x, y:y});
     this.units.add(unit);
+    
+    var zoneAddedTo = this.getTile(x, y).get("zone");
+    
+    // keep track of unit movements.
+    unit.bind("border-cross", function(fromZone, toZone) {
+      if(team==this.playingAsTeam) {
+        // then do zone occupancy updating
+        this.zonesOccupied[fromZone] = this.zonesOccupied[fromZone]-1;
+        
+        if(this.zonesOccupied[fromZone]==0) {
+          delete this.zonesOccupied[fromZone];
+        }
+        
+        var curOccupancy = 0;
+        if(toZone in this.zonesOccupied) {
+          curOccupancy = this.zonesOccupied[toZone];
+        }
+        
+        curOccupancy++;
+        this.zonesOccupied[toZone] = curOccupancy;
+        
+      } else {
+        // it's enemy movement. check and see if it should trigger a
+        // notification.
+        
+      }
+      
+      
+    }, this);
   },
   
   createFlagAt: function(x, y) {
