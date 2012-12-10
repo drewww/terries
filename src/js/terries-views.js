@@ -61,8 +61,26 @@ views.UnitView = Backbone.View.extend({
     
     // to do this, we'll compose a list of "zones we have vision in" and only
     // render ENEMY units when they're in one of those zones.  that will
-    // come from the map level. 
+    // come from the map level.
     
+    // check with the map. if we have don't have zone occupancy, then hide.
+    // otherwise, show.
+    if(types.curMap.playingAsTeam != 0) {
+      if(this.model.get("team")!=types.curMap.playingAsTeam) {
+        // if it's an enemy, then check visibility.
+      
+        var zone = this.model.getTile().get("zone");
+      
+        if(!(zone in types.curMap.zonesOccupied)) {
+          // drop out
+          this.$el.hide();
+          console.log("hiding enemy unit");
+          return this;
+        } else {
+          this.$el.show();
+        }
+      }
+    }
     
     if(this.model.get("team")==types.TEAM_ZERO){
       this.$el.addClass("team0");

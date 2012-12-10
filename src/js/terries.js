@@ -51,7 +51,10 @@ function TerriesGame(sock) {
         }, this.map);
         
         
+        
         console.log("set to team " + this.team);
+        
+        
         break;
       
       case "start":
