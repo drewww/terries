@@ -227,7 +227,7 @@ views.GameView = Backbone.View.extend({
   
   template: _.template('<div class="score team0"><%=score[0]%></div>\
 <div class="score team1"><%=score[1]%></div>\
-<div class="gameTime"><%=gameTime%></div><div class="turnTime"><%=timeToMove%></div>'),
+<div class="gameTime"><%=gameTime%></div><div class="turnTime"><%=timeToMove%><div class="indicator"></div></div>'),
   
   initialize: function(params) {
     Backbone.View.prototype.initialize.call(this, params);
@@ -240,6 +240,8 @@ views.GameView = Backbone.View.extend({
     var json = this.model.toJSON();
     // json["score"] = this.model.getScore();
     this.$el.html(this.template(json));
+    
+    this.$el.find(".indicator").css({width:((this.model.get("timeToMove")/15.0)*100 + "%")});
     
     return this;
   }

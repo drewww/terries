@@ -64,7 +64,9 @@ types.Game = Backbone.Model.extend({
   
   startMovePeriod: function(duration) {
     this.set("timeToMove",duration);
-    setTimeout(_.bind(this.countdown, this), 1000);
+    clearTimeout(this.timeout);
+    
+    this.timeout = setTimeout(_.bind(this.countdown, this), 1000);
     this.turnOver();
   },
   
@@ -73,7 +75,7 @@ types.Game = Backbone.Model.extend({
     this.set("timeToMove", val);
     
     if(val > 0) {
-      setTimeout(_.bind(this.countdown, this), 1000);
+      this.timeout = setTimeout(_.bind(this.countdown, this), 1000);
     }
   },
   
