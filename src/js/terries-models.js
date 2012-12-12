@@ -334,13 +334,25 @@ types.Map = Backbone.Collection.extend({
   initialize: function(models, options) {
     Backbone.Collection.prototype.initialize.call(this, models, options);
     types.curMap = this;
-    options = _.defaults(options, {width:200, height:400});
+    
+    options = _.defaults(options, {});
     
     this.zones = new types.ZoneCollection();
     this.zonesOccupied = {};
     
-    this.width = options.width;
-    this.height = options.height;
+    if("width" in options && "height" in options) {
+      // take this as a sign to auto-generate a set of base tiles.
+      this.generateBaseMap(options.width, options.height);
+    }
+    
+    this.units = new types.UnitCollection();
+    
+    _.bindAll(this);
+  },
+  
+  generateBaseMap: function(width, height) {
+    this.width = width;
+    this.height = height;
     
     var zoneWidth = Math.floor(this.width/3);
     var zoneHeight = Math.floor(this.height/3);
@@ -385,10 +397,10 @@ types.Map = Backbone.Collection.extend({
         this.add(newTile);
       }
     }
+  },
+  
+  loadMap: function(mapString) {
     
-    this.units = new types.UnitCollection();
-    
-    _.bindAll(this);
   },
   
   getTile: function(x, y) {
