@@ -265,7 +265,7 @@ types.Tile = Backbone.Model.extend({
           capturedBy = types.TEAM_ZERO;
           this.set("ownership", -1);
         }
-        
+        console.log("CAPTURED");
         this.trigger("captured", capturedBy, this);
       } else if(ownership<0.05 && ownership>=-0.05) {
         // this is basically decapping
@@ -380,34 +380,38 @@ types.Map = Backbone.Collection.extend({
         }
         
         var newTile = new types.Tile({x:x, y:y, zone:zone});
-        
-        newTile.bind("clicked", function(tile) {
-          
-          // if a unit is selected, make that its target.
-          if(!_.isNull(this.unitSelected)) {
-            this.unitSelected.setTarget(tile.get("x"), tile.get("y"));
-          }
-          
-        }, this);
-        
-        newTile.bind("captured", function(capturedBy, tile) {
-          // if this tile gets captured, flip ownership on its
-          // zone object, and trigger a zone-captured event.
-          var zone = this.zones.get(tile.get("zone"));
-          
-          if(zone.get("ownership")!=capturedBy) {
-            zone.set("ownership", capturedBy)
-            
-            console.log("zone captured: " + zone.id);
-            this.trigger("zone:captured", zone.id, capturedBy);
-          }
-        }, this);
-        
-        this.add(newTile);
+        this.addTile(newTile);
       }
     }
     
     this.postProcessMap();
+  },
+  
+  addTile: function(tile) {
+    
+    tile.bind("clicked", function(tile) {
+      
+      // if a unit is selected, make that its target.
+      if(!_.isNull(this.unitSelected)) {
+        this.unitSelected.setTarget(tile.get("x"), tile.get("y"));
+      }
+      
+    }, this);
+    
+    tile.bind("captured", function(capturedBy, tile) {
+      // if this tile gets captured, flip ownership on its
+      // zone object, and trigger a zone-captured event.
+      var zone = this.zones.get(tile.get("zone"));
+      
+      if(zone.get("ownership")!=capturedBy) {
+        zone.set("ownership", capturedBy)
+        
+        console.log("zone captured: " + zone.id);
+        this.trigger("zone:captured", zone.id, capturedBy);
+      }
+    }, this);
+    
+    this.add(tile);
   },
   
   loadMap: function(mapString) {
@@ -438,7 +442,7 @@ types.Map = Backbone.Collection.extend({
           curTile.set("zone", parseInt(char));
           break;
         case ",":
-          this.add(curTile);
+          this.addTile(curTile);
           console.log("finished tile: " + JSON.stringify(curTile.toJSON()));
           x++;
           curTile = new types.Tile({x:x, y:y});
