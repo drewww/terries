@@ -239,11 +239,14 @@ types.Tile = Backbone.Model.extend({
     zone: null,
     ownership: 0,
     zoneOwnership: null,
+    boundaries: null,
   },
   
   initialize: function(attributes) {
     Backbone.Model.prototype.initialize.call(this, attributes);
     this.set("id", this.get("x") + "x" + this.get("y"));
+    
+    this.set("boundaries", [false, false, false, false]);
     
     this.bind("change:ownership", function() {
       var ownership = this.get("ownership");
@@ -403,6 +406,8 @@ types.Map = Backbone.Collection.extend({
         this.add(newTile);
       }
     }
+    
+    this.postProcessMap();
   },
   
   loadMap: function(mapString) {
@@ -459,12 +464,40 @@ types.Map = Backbone.Collection.extend({
     }, this));
     
     console.log("dimensions: " + this.width + "x" + this.height);
+    this.postProcessMap();
   },
   
   postProcessMap: function() {
     // figure out zone boundaries for visual purposes. Loop through after
     // the whole map is constructed. 
-    
+    for(var y=0; y<this.height; y++) {
+      for(var x=0; x<this.width; x++) {
+        var tile = this.getTile(x, y);
+        
+        // for both of these, it's top, right, bottom, left ala CSS
+        var boundaries = [false, false, false, false];
+        
+        // check adjacency for zone transitions;
+        var adjacentTiles = [
+          tile.getAdjacentTile(0, -1),
+          tile.getAdjacentTile(1, 0),
+          tile.getAdjacentTile(0, 1),
+          tile.getAdjacentTile(-1, 0),
+        ];
+        
+        var i=0;
+        _.each(adjacentTiles, function(adjacentTile) {
+          if(_.isUndefined(adjacentTile)) {
+            boundaries[i] = true;
+          } else {
+            boundaries[i] = tile.get("zone") != adjacentTile.get("zone");
+          }
+          i++;
+        });
+        
+        tile.set('boundaries', boundaries);
+      }
+    }
   },
   
   getTile: function(x, y) {

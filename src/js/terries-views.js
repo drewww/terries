@@ -196,6 +196,16 @@ views.TileView = Backbone.View.extend({
       this.$el.removeClass("zone-owned-1");
     }
     
+    var boundaries = this.model.get("boundaries");
+    var direction = ["Top", "Right", "Bottom", "Left"];
+    for(var i=0; i<4; i++) {
+      if(boundaries[i]) {
+        this.$el.css("border" + direction[i], "1px solid black");
+      }
+    }
+    
+    
+    
     return this;
   },
   
