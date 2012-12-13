@@ -120,7 +120,13 @@ types.Unit = Backbone.Model.extend({
       // console.log("changed: "+ JSON.stringify(this.changedAttributes()));
     }, this);
     
-    var tile = types.curMap.getTile(this.get("x"), this.get("y"));
+    var tile;
+    if("tile" in attributes) {
+      tile = attributes["tile"];
+    } else {
+      tile = types.curMap.getTile(this.get("x"), this.get("y"));
+    }
+    
     tile.set("unitId", this.id);
   },
   
@@ -401,17 +407,80 @@ types.Map = Backbone.Collection.extend({
   
   loadMap: function(mapString) {
     
+    var x = 0;
+    var y = 0;
+    var curTile = new types.Tile({x:x, y:y});
+    
+    _.each(mapString, _.bind(function(char) {
+      switch(char) {
+        case "1":
+        case "2":
+        case "3":
+        case "4":
+        case "5":
+        case "6":
+        case "7":
+        case "8":
+        case "9":
+        case "0":
+          var zoneId = parseInt(char);
+          
+          if(_.isUndefined(this.zones.get(zoneId))) {
+            var newZone = new types.Zone({id:zoneId});
+            this.zones.add(newZone);
+          }
+          
+          curTile.set("zone", parseInt(char));
+          break;
+        case ",":
+          this.add(curTile);
+          console.log("finished tile: " + JSON.stringify(curTile.toJSON()));
+          x++;
+          curTile = new types.Tile({x:x, y:y});
+          break;
+        case "x":  // carriage return
+          console.log("NEW ROW");
+          this.width = x-1;
+          this.height = y;
+          x = 0;
+          y++;
+          curTile = new types.Tile({x:x, y:y});
+          break;
+        case "f":
+          curTile.set("flag", true);
+          break;
+        case "a":
+          this.createUnitInTile(curTile, -1);
+          break;
+        case "b":
+          this.createUnitInTile(curTile, 1);
+          break;
+      }
+    }, this));
+    
+    console.log("dimensions: " + this.width + "x" + this.height);
+  },
+  
+  postProcessMap: function() {
+    // figure out zone boundaries for visual purposes. Loop through after
+    // the whole map is constructed. 
+    
   },
   
   getTile: function(x, y) {
-    return this.at(x + y*this.height);
+    return this.get(x + "x" + y);
   },
   
   createUnitAt: function(x, y, team) {
-    var unit = new types.Unit({team:team, x:x, y:y});
+    this.createUnitInTile(this.getTile(x, y), team);
+  },
+  
+  createUnitInTile: function(tile, team) {
+    var params = {team:team, x:tile.get("x"), y:tile.get("y"), tile:tile};
+    var unit = new types.Unit(params);
     this.units.add(unit);
     
-    var zoneAddedTo = this.getTile(x, y).get("zone");
+    var zoneAddedTo = tile.get("zone");
     
     // keep track of unit movements.
     unit.bind("border-cross", function(fromZone, toZone) {

@@ -4,26 +4,23 @@ function TerriesGame(sock) {
   
   // make a new map.
   // eventually we'll be loading maps out of some sort of file.
-	this.map = new types.Map(null, {width:60, height: 60});
+	this.map = new types.Map(null, {});
 	this.game = new types.Game();
 	
-  this.map.createUnitAt(5, 5, -1);
-  this.map.createUnitAt(10, 5, -1);
-  this.map.createUnitAt(5, 10, -1);
-
-  this.map.createUnitAt(55, 55, 1);
-  this.map.createUnitAt(50, 55, 1);
-  this.map.createUnitAt(55, 50, 1);
+ var mapString = "1,1,1,1,1,1,2,2,2,2,2,2,x\
+1,1a,1,1a,1,1,2,2,2,2,2,2,x\
+1,1,1f,1,1,1,2,2,2,2f,2,2,x\
+1,1a,1,1,1,1,2,2,2,2,2,2,x\
+1,1,1,1,1,1,2,2,2,2,2,2,x\
+1,1,1,1,1,1,2,2,2,2,2,2,x\
+3,3,3,3,3,3,4,4,4,4,4,4,x\
+3,3,3,3,3,3,4,4,4,4,4,4,x\
+3,3,3,3,3,3,4,4,4,4,4b,4,x\
+3,3,3f,3,3,3,4,4,4,4f,4,4,x\
+3,3,3,3,3,3,4,4,4b,4,4b,4,x\
+3,3,3,3,3,3,4,4,4,4,4,4,x"
   
-  this.map.createFlagAt(10, 10);
-  this.map.createFlagAt(30, 10);
-  this.map.createFlagAt(50, 10);
-  this.map.createFlagAt(10, 30);
-  this.map.createFlagAt(30, 30);
-  this.map.createFlagAt(50, 30);
-  this.map.createFlagAt(10, 50);
-  this.map.createFlagAt(30, 50);
-  this.map.createFlagAt(50, 50);
+  this.map.loadMap(mapString);
   
   // wait for a start command
   sock.onmessage = _.bind(function(e) {
