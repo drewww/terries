@@ -135,15 +135,13 @@
   font-size: 2em;
   
   float: left;
-}
-
-.turnTime {
   position: relative;
   overflow: hidden;
   color: black;
+  
 }
 
-.turnTime .countdown{
+.turnTime .countdown, .gameTime .countdown{
   position: relative;
   z-index: 2;
 }
@@ -157,6 +155,11 @@
   background-color: red;
   z-index: 1;
 }
+
+.gameTime .indicator {
+  background-color: orange;
+}
+
 
 
 
