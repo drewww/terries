@@ -445,8 +445,8 @@ types.Map = Backbone.Collection.extend({
           break;
         case "x":  // carriage return
           console.log("NEW ROW");
-          this.width = x-1;
-          this.height = y;
+          this.width = x;
+          this.height = y+1;
           x = 0;
           y++;
           curTile = new types.Tile({x:x, y:y});
@@ -487,7 +487,8 @@ types.Map = Backbone.Collection.extend({
         
         var i=0;
         _.each(adjacentTiles, function(adjacentTile) {
-          if(_.isUndefined(adjacentTile)) {
+          // console.log(adjacentTile);
+          if(_.isUndefined(adjacentTile) || _.isNull(adjacentTile)) {
             boundaries[i] = true;
           } else {
             boundaries[i] = tile.get("zone") != adjacentTile.get("zone");
@@ -496,12 +497,16 @@ types.Map = Backbone.Collection.extend({
         });
         
         tile.set('boundaries', boundaries);
+        // console.log(x + "," + y + ":" + JSON.stringify(boundaries));
       }
     }
   },
   
   getTile: function(x, y) {
-    return this.get(x + "x" + y);
+    var result = this.get(x + "x" + y);
+    // console.log(x + "x" + y+":" + result);
+    // console.log(result);
+    return result;
   },
   
   createUnitAt: function(x, y, team) {

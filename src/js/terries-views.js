@@ -199,6 +199,7 @@ views.TileView = Backbone.View.extend({
     var boundaries = this.model.get("boundaries");
     var direction = ["Top", "Right", "Bottom", "Left"];
     for(var i=0; i<4; i++) {
+      // console.log(this.model.get("x") + "," + this.model.get("y") + ":" + JSON.stringify(boundaries));
       if(boundaries[i]) {
         this.$el.css("border" + direction[i], "1px solid black");
       }
