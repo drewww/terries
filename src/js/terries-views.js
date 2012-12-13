@@ -241,7 +241,7 @@ views.GameView = Backbone.View.extend({
   
   template: _.template('<div class="score team0"><%=score[0]%></div>\
 <div class="score team1"><%=score[1]%></div>\
-<div class="gameTime"><%=gameTime%></div><div class="turnTime"><%=timeToMove%><div class="indicator"></div></div>'),
+<div class="gameTime"><%=gameTime%></div><div class="turnTime"><div class="countdown"><%=timeToMove%></div><div class="indicator"></div></div>'),
   
   initialize: function(params) {
     Backbone.View.prototype.initialize.call(this, params);
