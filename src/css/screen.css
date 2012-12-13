@@ -19,26 +19,26 @@
 
 .ownership {
   position: absolute;
-  left: 2;
-  width: 6px;
-  height: 6px;
+  left: 0;
+  width: 20px;
+  height: 20px;
 }
 
 .unit {
-  width: 10px;
-  height: 10px;
+  width: 20px;
+  height: 20px;
   
-  border-radius: 5px;
+  border-radius: 10px;
 }
 
 .unit.selected {
   position: relative;
-  top: -4px;
-  left: -4px;
-  width: 18px;
-  height: 18px;
+  top: -10px;
+  left: -10px;
+  width: 40px;
+  height: 40px;
   z-index: 10;
-  border-radius: 9px;
+  border-radius: 20px;
 }
 
 /*.tile.even {
@@ -52,8 +52,10 @@
 
 .tile {
   float: left;
-  width: 10px;
-  height: 10px;
+  width: 20px;
+  height: 20px;
+  
+  box-sizing: border-box;
   
   position: relative;
 }
@@ -61,16 +63,16 @@
 .tile.target-0, .tile.mouseover-0:hover {
   border: 2px solid #55ff55;
   border-radius: 3px;
-  width: 6px;
+/*  width: 6px;
   height: 6px;
-}
+*/}
 
 .tile.target-1, .tile.mouseover-1:hover {
   border: 2px solid #5555ff;
   border-radius: 3px;
-  width: 6px;
+/*  width: 6px;
   height: 6px;
-}
+*/}
 
 .tile.zone-owned-0 {
   background-color: #ccffcc;
@@ -82,9 +84,9 @@
 
 .tile.flag {
   border: 2px solid black;
-  width: 6px;
+/*  width: 6px;
   height: 6px;
-  overflow: hidden;
+*/  overflow: hidden;
 }
 
 .tile.impassable {
@@ -97,9 +99,9 @@
 
 .tile.trespassing {
   border: 1px solid #ddd;
-  width: 8px;
+/*  width: 8px;
   height: 8px;
-}
+*/}
 
 .scoreboard {
   width: 600px;

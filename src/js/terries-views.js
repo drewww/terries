@@ -182,7 +182,7 @@ views.TileView = Backbone.View.extend({
         ownershipDiv.addClass("team0");
       }
       
-      ownershipDiv.css("top", 10-10*(Math.abs(ownership)));
+      ownershipDiv.css("top", 20-20*(Math.abs(ownership)));
       this.$el.append(ownershipDiv);
     }
     
@@ -217,7 +217,10 @@ views.TileView = Backbone.View.extend({
       var curTargetTile = types.curMap.getTile(
         views.selectedUnitView.model.get("targetX"),
         views.selectedUnitView.model.get("targetY"));
-      curTargetTile.set("isTargetForTeam", null);
+      
+      if(!_.isUndefined(curTargetTile)) {
+        curTargetTile.set("isTargetForTeam", null);
+      }
       
       views.selectedUnitView.model.setTarget(this.model.get("x"),
         this.model.get("y"));
