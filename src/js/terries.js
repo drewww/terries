@@ -71,7 +71,7 @@ function TerriesGame(sock) {
       case "start":
         console.log("GAME ON");
         
-        this.game.start(20);
+        this.game.start(3);
         this.game.startMovePeriod(15);
         // allow selection now.
         this.setSelectionEnabled(true);

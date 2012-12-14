@@ -199,13 +199,10 @@ views.TileView = Backbone.View.extend({
     var boundaries = this.model.get("boundaries");
     var direction = ["Top", "Right", "Bottom", "Left"];
     for(var i=0; i<4; i++) {
-      // console.log(this.model.get("x") + "," + this.model.get("y") + ":" + JSON.stringify(boundaries));
       if(boundaries[i]) {
         this.$el.css("border" + direction[i], "1px solid black");
       }
     }
-    
-    
     
     return this;
   },
@@ -230,7 +227,6 @@ views.TileView = Backbone.View.extend({
       sock.send(JSON.stringify({type:"move", id:views.selectedUnitView.model.id,
         target:{x:this.model.get("x"), y:this.model.get("y")}}));
         
-        
       views.setSelectedUnitView(null);
     }
   }
@@ -249,6 +245,25 @@ views.GameView = Backbone.View.extend({
     this.model.bind("change", function() {
       this.render();
     }, this);
+    
+    this.model.bind("gameover", function() {
+      // show a game over dialog box.
+      $(".selection-block").show();
+      
+      var dialogTemplate = _.template('<div class="gameOver"><h1>GAME OVER</h1><div><h2><%=winner%> wins, <%=winnerScore%>-<%=loserScore%></h2></div>');
+      
+      var score = this.model.get("score");
+      var fields;
+      if(score[0]>score[1]) {
+        fields = {winner:"BLUE", winnerScore:score[0], loserScore:score[1]};
+      } else {
+        fields = {winner:"GREEN", winnerScore:score[1], loserScore:score[0]};
+      }
+      
+      var dialogEl = $(dialogTemplate(fields));
+      
+      dialogEl.appendTo($("body"));
+    }, this);
   },
   
   render: function() {
@@ -258,7 +273,6 @@ views.GameView = Backbone.View.extend({
     
     this.$el.find(".turnTime .indicator").css({width:((this.model.get("timeToMove")/15.0)*100 + "%")});
     this.$el.find(".gameTime .indicator").css({width:((this.model.get("gameTime")/this.model.get("duration"))*100 + "%")});
-
     
     return this;
   }

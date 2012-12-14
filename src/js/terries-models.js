@@ -92,6 +92,10 @@ types.Game = Backbone.Model.extend({
     
     if(turn==this.get("duration")) {
       console.log("GAME OVER");
+      
+      // disconnect the socket
+      sock.close();
+      
       this.trigger("gameover");
     } else {
       this.set("gameTime", turn);

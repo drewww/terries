@@ -161,7 +161,13 @@
 }
 
 
-
+.gameOver {
+  position: absolute;
+  top: 100px;
+  left: 200px;
+  border: 1px solid black;
+  background-color: white;
+}
 
 br.clear {
     content: ".";
